@@ -90,7 +90,7 @@ distributions where the mixture parameters of the matlab package
 \code{bayesf}, Version 2.0 of Fruehwirth-Schnatter (2007) are used.
 See Fruehwirth-Schnatter et al. (2009) for details.
 
-For details concerning the sampling algorithm see Dvorzak and Wagner (forthcoming)
+For details concerning the sampling algorithm see Dvorzak and Wagner (online first version)
 and Wagner and Duller (2012).
 
 Details for the model specification (see arguments):
@@ -209,8 +209,9 @@ plot(m5, maxPlots = 4)
 Michaela Dvorzak <m.dvorzak@gmx.at>, Helga Wagner
 }
 \references{
-Dvorzak, M. and Wagner, H. (forthcoming). Sparse Bayesian modelling of
-  underreported count data. \emph{Statistical Modelling}.
+Dvorzak, M. and Wagner, H. (online first version). Sparse Bayesian modelling
+ of underreported count data. \emph{Statistical Modelling}, 2015-06-18,
+ \url{http://dx.doi.org/10.1177/1471082x15588398}.
 
 Fruehwirth-Schnatter, S. (2007). Matlab package \code{bayesf} 2.0
   on \emph{Finite Mixture and Markov Switching Models}, Springer.

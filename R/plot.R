@@ -26,6 +26,9 @@
 #' 
 #' @author Michaela Dvorzak <m.dvorzak@@gmx.at>
 #' @import ggplot2
+#' @import stats
+#' @import utils
+#' @import grDevices
 #' @export
 #' 
 #' @examples

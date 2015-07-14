@@ -33,7 +33,7 @@
 #' within clusters. Bayesian variance selection is applied to determine whether
 #' there is within-cluster dependence in either part of the model.  
 #' 
-#' For details concerning the sampling algorithm see Dvorzak and Wagner (forthcoming).
+#' For details concerning the sampling algorithm see Dvorzak and Wagner (online first version).
 #' 
 #' Details for the model specification (see arguments):  
 #' \describe{ 
@@ -206,12 +206,15 @@
 #' 
 #' @seealso \code{\link{logitBvs}}, \code{\link{poissonBvs}} 
 #'  
-#' @references Dvorzak, M. and Wagner, H. (forthcoming). Sparse Bayesian modelling
-#'  of underreported count data. \emph{Statistical Modelling}.
+#' @references Dvorzak, M. and Wagner, H. (online first version). Sparse Bayesian modelling
+#'  of underreported count data. \emph{Statistical Modelling}, 2015-06-18,
+#'  \url{http://dx.doi.org/10.1177/1471082x15588398}.
 #'
 #' @author Michaela Dvorzak <m.dvorzak@@gmx.at>, Helga Wagner
 #' @importFrom BayesLogit compute.mixture
 #' @importFrom plyr rbind.fill
+#' @import stats
+#' @import utils
 #' @export
 #' 
 #' @examples

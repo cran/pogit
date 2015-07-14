@@ -10,14 +10,15 @@ citEntry(entry = "Article",
          title = "Sparse Bayesian modelling of underreported count data",
          author = personList(as.person("Michaela Dvorzak"), as.person("Helga Wagner")),
          journal = "Statistical Modelling",
-         year = "forthcoming",
+         year = "online first version",
          volume = "",
          pages = "",
-         textVersion = paste("Michaela Dvorzak and Helga Wagner (forthcoming).",
+         url = "http://dx.doi.org/10.1177/1471082x15588398",
+         textVersion = paste("Michaela Dvorzak and Helga Wagner (online first version).",
                              "Sparse Bayesian modelling of underreported count data.",
-                             "Statistical Modelling.")
+                             "Statistical Modelling. 2015-06-18.",
+                             "doi: 10.1177/1471082x15588398",
+                             "URL: http://dx.doi.org/10.1177/1471082x15588398")
          )
-
-
 
 

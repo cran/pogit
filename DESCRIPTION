@@ -1,8 +1,8 @@
 Package: pogit
 Type: Package
 Title: Bayesian Variable Selection for a Poisson-Logistic Model
-Version: 1.0.0
-Date: 2015-05-01
+Version: 1.0.1
+Date: 2015-07-14
 Authors@R: c(person("Michaela", "Dvorzak", role = c("aut","cre"), 
   email = "m.dvorzak@gmx.at"),
   person("Helga", "Wagner", role = "aut"))
@@ -13,9 +13,9 @@ Description: Bayesian variable selection for regression models of under-reported
   spike and slab priors. 
 License: GPL-2
 Depends: R(>= 2.10.0)
-Imports: BayesLogit, ggplot2, logistf, plyr
+Imports: BayesLogit, ggplot2, logistf, plyr, stats, utils, grDevices
 LazyData: true
 NeedsCompilation: no
-Packaged: 2015-05-02 12:21:14 UTC; michi
+Packaged: 2015-07-14 18:50:18 UTC; michi
 Repository: CRAN
-Date/Publication: 2015-05-02 15:01:52
+Date/Publication: 2015-07-15 01:53:18

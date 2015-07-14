@@ -16,8 +16,9 @@
    process (sample size of validation data)}
 }}
 \source{
-Dvorzak, M. and Wagner, H. (forthcoming). Sparse Bayesian modelling
- of underreported count data. \emph{Statistical Modelling}.
+Dvorzak, M. and Wagner, H. (online first version). Sparse Bayesian modelling
+ of underreported count data. \emph{Statistical Modelling}, 2015-06-18,
+ \url{http://dx.doi.org/10.1177/1471082x15588398}.
 }
 \usage{
 data(simul1)
@@ -31,7 +32,7 @@ The regression effects are set to \code{beta = {0.75,0.5,-2,0,0}} in the
 Poisson and to \code{alpha = {2.2,-1.9,0,0,0}} in the logit model.
 Additionally to the main study sample, validation data are available for
 each covariate pattern. For details concerning the simulation setup see
-Dvorzak and Wagner (forthcoming).
+Dvorzak and Wagner (online first version).
 }
 \seealso{
 \code{\link{pogitBvs}}

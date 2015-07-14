@@ -89,7 +89,7 @@ model is approximated by a finite scale mixture of normal distributions, where
 the mixture parameters are taken from the R package \code{binomlogit}.
 See Fussl (2014) for details.
 
-For details concerning the sampling algorithm see Dvorzak and Wagner (forthcoming)
+For details concerning the sampling algorithm see Dvorzak and Wagner (online first version)
 and Wagner and Duller (2012).
 
 Details for the model specification (see arguments):
@@ -188,8 +188,9 @@ plot(m3, type = "acf", maxPlots = 4)
 Michaela Dvorzak <m.dvorzak@gmx.at>, Helga Wagner
 }
 \references{
-Dvorzak, M. and Wagner, H. (forthcoming). Sparse Bayesian modelling
- of underreported count data. \emph{Statistical Modelling}.
+Dvorzak, M. and Wagner, H. (online first version). Sparse Bayesian modelling
+ of underreported count data. \emph{Statistical Modelling}, 2015-06-18,
+ \url{http://dx.doi.org/10.1177/1471082x15588398}.
 
 Fussl, A., Fruehwirth-Schnatter, S. and Fruehwirth, R. (2013).
   Efficient MCMC for Binomial Logit Models. \emph{ACM Transactions on

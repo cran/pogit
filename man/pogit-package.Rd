@@ -9,7 +9,7 @@ for regression models of under-reported count data as well as for Poisson and
 binomial logit regression models using spike and slab priors. 
 For posterior inference, MCMC sampling schemes are used that rely on data 
 augmentation and/or auxiliary mixture sampling techniques. 
-Details can be found in Dvorzak and Wagner (forthcoming). 
+Details can be found in Dvorzak and Wagner (online first version). 
 %A concise (1-5 lines) description of the package 
 }
 \details{
@@ -51,8 +51,9 @@ Michaela Dvorzak <m.dvorzak@gmx.at>, Helga Wagner
 Maintainer: Michaela Dvorzak <m.dvorzak@gmx.at>
 }
 \references{
-Dvorzak, M. and Wagner, H. (forthcoming). Sparse Bayesian modelling of underreported
-count data. \emph{Statistical Modelling}. 
+Dvorzak, M. and Wagner, H. (online first version). Sparse Bayesian modelling of underreported
+count data. \emph{Statistical Modelling}, 2015-06-18, 
+doi: 10.1177/1471082x15588398, \url{http://dx.doi.org/10.1177/1471082x15588398}.
 
 Winkelmann, R. and Zimmermann, K. F. (1993). Poisson-Logistic regression. 
 Department of Economics, University of Munich, Working Paper No. 93-18.

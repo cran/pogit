@@ -132,7 +132,7 @@ be included in both model parts of the Pogit model to account for dependence
 within clusters. Bayesian variance selection is applied to determine whether
 there is within-cluster dependence in either part of the model.
 
-For details concerning the sampling algorithm see Dvorzak and Wagner (forthcoming).
+For details concerning the sampling algorithm see Dvorzak and Wagner (online first version).
 
 Details for the model specification (see arguments):
 \describe{
@@ -329,8 +329,9 @@ plot(m5, type = "acf", lag.max = 50)
 Michaela Dvorzak <m.dvorzak@gmx.at>, Helga Wagner
 }
 \references{
-Dvorzak, M. and Wagner, H. (forthcoming). Sparse Bayesian modelling
- of underreported count data. \emph{Statistical Modelling}.
+Dvorzak, M. and Wagner, H. (online first version). Sparse Bayesian modelling
+ of underreported count data. \emph{Statistical Modelling}, 2015-06-18,
+ \url{http://dx.doi.org/10.1177/1471082x15588398}.
 }
 \seealso{
 \code{\link{logitBvs}}, \code{\link{poissonBvs}}

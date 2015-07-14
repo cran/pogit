@@ -12,7 +12,7 @@
 #' with standard deviations \eqn{\theta_\beta}=\code{0.1} and 
 #' \eqn{\theta_\alpha}=\code{0.3}. Additionally to the main study sample, 
 #' validation data are available for each covariate pattern and cluster. 
-#' For details concerning the simulation setup see Dvorzak and Wagner (forthcoming). 
+#' For details concerning the simulation setup see Dvorzak and Wagner (online first version). 
 #' 
 #' @docType data
 #' @usage data(simul2)
@@ -30,8 +30,10 @@
 #'    process (sample size of validation data)}
 #' }
 #' 
-#' @source Dvorzak, M. and Wagner, H. (forthcoming). Sparse Bayesian modelling
-#'  of underreported count data. \emph{Statistical Modelling}.
+#' @source Dvorzak, M. and Wagner, H. (online first version). Sparse Bayesian modelling
+#'  of underreported count data. \emph{Statistical Modelling}, 2015-06-18,
+#'  \url{http://dx.doi.org/10.1177/1471082x15588398}. 
+#' 
 #' @seealso \code{\link{pogitBvs}}
 #' @name simul2
 NULL
