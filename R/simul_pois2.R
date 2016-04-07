@@ -13,13 +13,14 @@
 #' @usage data(simul_pois2)
 #' @format A data frame with 300 rows and the following 12 variables: 
 #' \describe{
-#'  \item{\code{y}}{Number of counts for each covariate pattern in each cluster}
-#'  \item{\code{cID}}{Cluster ID of each count}
-#'  \item{\code{X.0}}{Intercept}
-#'  \item{\code{X.1}, \code{X.2}, \code{X.3}, \code{X.4}, \code{X.5}, \code{X.6}, \code{X.7}, \code{X.8}, \code{X.9}, \code{X.10}}{Covariates}
+#'  \item{\code{y}}{number of counts for each covariate pattern in each cluster}
+#'  \item{\code{cID}}{cluster ID of each count}
+#'  \item{\code{X.0}}{intercept}
+#'  \item{\code{X.1}, \code{X.2}, \code{X.3}, \code{X.4}, \code{X.5}, \code{X.6}, \code{X.7}, \code{X.8}, \code{X.9}, \code{X.10}}{covariates}
 #' }
 #' 
 #' @seealso \code{\link{simul_pois1}}, \code{\link{poissonBvs}}
 #' @name simul_pois2
+#' @keywords datasets
 NULL
 

@@ -30,12 +30,13 @@
 #'   
 #' @aliases print.summary.pogit
 #' @export
-#' 
+ 
 summary.pogit <- function(object, IAT = FALSE, printRes = FALSE, ...){
-  stopifnot(class(object)=="pogit")
+  stopifnot(class(object) == "pogit")
   
   if (object$family %in% c("logit", "pogit")){
-    samples <- lapply(object$samplesL, thinMCMC, start = object$mcmc$burnin + 1, object$mcmc)
+    samples <- lapply(object$samplesL, thinMCMC, start = object$mcmc$burnin + 1, 
+                      object$mcmc)
     samples$absThetaAlpha <- NULL
     if(!is.null(samples$thetaAlpha)) samples$absThetaAlpha <- abs(samples$thetaAlpha)
     postMeansL <- lapply(samples, function(x){
@@ -52,10 +53,10 @@ summary.pogit <- function(object, IAT = FALSE, printRes = FALSE, ...){
     if (IAT){
       iatL <- lapply(samples[c("alpha", "pdeltaAlpha", "pgammaAlpha")], function(x){
         if (!is.null(x[[1]])) return(t(apply(x, MARGIN = 2, iatMCMC)))
-        })
+      })
     }
     
-    if (printRes && object$family=="pogit"){
+    if (printRes && object$family == "pogit"){
       muL <- object$data$W%*%postMeansL$alpha
       if (object$model.logit$ri==1){
         linp <- muL + postMeansL$ai
@@ -80,18 +81,40 @@ summary.pogit <- function(object, IAT = FALSE, printRes = FALSE, ...){
     })
     
     if (IAT){
-      iatP <- lapply(samples[c("beta","pdeltaBeta","pgammaBeta")], function(x){
+      iatP <- lapply(samples[c("beta", "pdeltaBeta", "pgammaBeta")], function(x){
         if (!is.null(x[[1]])) return(t(apply(x, MARGIN = 2, iatMCMC)))
-        })
+      })
     }
     
-    if (printRes && object$family=="pogit"){
+    if (printRes && object$family == "pogit"){
       muP <- object$data$X%*%postMeansP$beta
-      if (object$model.pois$ri==1){
+      if (object$model.pois$ri == 1){
         linp <- muP + postMeansP$bi
       } else linp <- muP
       lambda.est <- exp(linp)
     }   
+  }
+  
+  if (object$family == "negbin"){
+    samples <- lapply(object$samplesNB, thinMCMC, start = object$mcmc$burnin + 1, 
+                      object$mcmc)
+    postMeansNB <- lapply(samples, function(x){
+      if (!is.null(x[[1]])){
+        return(colMeans(x))
+      }
+    })
+    hpdNB <- lapply(samples[c("beta", "rho")], function(x){
+      if (!is.null(x[[1]])){
+        return(t(apply(x, MARGIN = 2, hpdMCMC)))
+      }
+    })
+    
+    if (IAT){
+      iatNB <- lapply(samples[c("beta", "pdeltaBeta", "rho")], function(x){
+        if (!is.null(x[[1]])) return(t(apply(x, MARGIN = 2, iatMCMC)))
+      })
+    }
+    
   }
   
   if (object$family %in% c("logit", "pogit")){
@@ -120,7 +143,7 @@ summary.pogit <- function(object, IAT = FALSE, printRes = FALSE, ...){
       IATLogit <- as.matrix(resIAT)
     }
     
-    if (printRes && object$family=="pogit"){
+    if (printRes && object$family == "pogit"){
       probs <- data.frame(prob = round(p.est, 3))
       rownames(probs) <- as.character(seq_len(nrow(object$data$W)))
     }
@@ -152,14 +175,42 @@ summary.pogit <- function(object, IAT = FALSE, printRes = FALSE, ...){
       IATPois <- as.matrix(resIAT)
     }
     
-    if (printRes && object$family=="pogit"){
+    if (printRes && object$family == "pogit"){
       risks <- data.frame(risk = round(lambda.est, 3))
       rownames(risks) <- as.character(seq_len(nrow(object$data$X)))
-      if (all(object$data$offset==1)) colnames(risks) <- "intensity"
+      if (all(object$data$E == 1)) colnames(risks) <- "intensity"
     }
   }
   
-  if (object$family=="pogit"){
+  if (object$family == "negbin"){
+    tabrow <- object$model.nb$d + 2
+    tabcol <- 3 + as.numeric(object$BVS)    
+    resNB   <- c(postMeansNB$beta, postMeansNB$rho)
+    resHPDNB <- rbind(hpdNB$beta, hpdNB$rho)
+    
+    resmod <- data.frame(matrix(NA, nrow = tabrow, ncol = tabcol))
+    rownames(resmod) <- names(resNB)
+    rownames(resmod)[1] <- "(Intercept)"
+    colnres <- switch(as.character(object$BVS),
+                      "TRUE" = c("Estimate","P(.=1)","95%-HPD[l]","95%-HPD[u]"),
+                      "FALSE" = c("Estimate","95%-HPD[l]","95%-HPD[u]"))
+    colnames(resmod) <- colnres
+    resmod$Estimate <- round(resNB, 3)
+    if (tabcol > 3){
+      resmod[-c(1,tabrow),2] <- round(postMeansNB$pdeltaBeta, 3)
+    }
+    resmod[,(tabcol-1):tabcol] <- round(resHPDNB, 3)
+    tabNB <- as.matrix(resmod)
+    
+    if (IAT){
+      if (!object$BVS) iatNB$pdeltaBeta <- NULL
+      resIAT <- round(data.frame(rbind(iatP$beta, iatP$pdeltaBeta, iatP$rho)), 2) 
+      IATNB <- as.matrix(resIAT)
+    }
+    
+  }
+  
+  if (object$family == "pogit"){
     rownames(tabLogit)[1] <- "(Intercept) Logit"
     rownames(tabPois)[1]  <- "(Intercept) Poisson"
     tabPogit <- rbind(tabPois, tabLogit)
@@ -167,31 +218,35 @@ summary.pogit <- function(object, IAT = FALSE, printRes = FALSE, ...){
   }
   
   modTable <- switch(as.character(object$family),
-         "logit"   = tabLogit,
-         "poisson" = tabPois,
-         "pogit"   = tabPogit, "\n")
+                     "logit"   = tabLogit,
+                     "poisson" = tabPois,
+                     "pogit"   = tabPogit, 
+                     "negbin"  = tabNB, "\n")
   
   if (IAT){
     iatTable <- switch(as.character(object$family),
-                     "logit"   = IATLogit,
-                     "poisson" = IATPois,
-                     "pogit"   = IATPogit, "\n")
+                       "logit"   = IATLogit,
+                       "poisson" = IATPois,
+                       "pogit"   = IATPogit, 
+                       "negbin"  = IATNB, "\n")
   } else iatTable <- NULL
   
-  if (printRes && object$family=="pogit"){
+  if (printRes && object$family == "pogit"){
     resTable <- list(probs = probs, risks = t(risks))
   } else resTable <- NULL
-
+  
   return(structure(
     c(list(modTable = modTable, iatTable = iatTable, resTable = resTable), 
-      IAT = IAT, printRes = printRes, object), class="summary.pogit"))
+      IAT = IAT, printRes = printRes, object), class = "summary.pogit"))
 }  
+
 
 
 
 #' @rdname summary.pogit 
 #' @param x a \code{summary.pogit} object produced by \code{summary.pogit()} 
 #' @export
+
 print.summary.pogit <- function(x, ...){
   if (x$family=="logit"){
     bin <- "binomial "
@@ -199,13 +254,18 @@ print.summary.pogit <- function(x, ...){
   }
   cat(paste(
     bvs <- switch(as.character(x$BVS), 
-                "TRUE"  = "Bayesian variable selection",
-                "FALSE" = "MCMC"), 
-    "for", switch(as.character(x$family),
+                  "TRUE"  = "Bayesian variable selection",
+                  "FALSE" = "MCMC"), 
+    "for the", switch(as.character(x$family),
                   "logit"   = paste(bin, "logit", sep=""),
-                  "pogit"   = "Pogit",
-                  "poisson" = "Poisson"), "model:\n"))
-
+                  "pogit"   = switch(as.character(x$fun), 
+                                     "select_poisson" = "Pogit",
+                                     "select_poissonOD" = "overdispersed Pogit"),
+                  "poisson" = switch(as.character(x$fun), 
+                                     "select_poisson" = "Poisson",
+                                     "select_poissonOD" = "overdispersed Poisson"),
+                  "negbin"  = "negative binomial"), "model:\n"))
+  
   if (typeof(x$IAT) != "logical") stop("invalid 'IAT' argument") 
   
   cat("\nCall:\n")
@@ -217,65 +277,127 @@ print.summary.pogit <- function(x, ...){
   if (x$BVS) cat("\nBVS started after", x$mcmc$startsel, "iterations")
   cat("\nThinning parameter:", x$mcmc$thin)
   
+  
+  if(x$family == "negbin"){
+    cat(paste0("\n\nAcceptance rate for rho:\n", x$acc.rho, "%"))
+  }
+  
   cat("\n\nPrior:")
   if (x$family %in% c("poisson", "pogit")){
     pr.txt <- switch(as.character(x$BVS),
                      "TRUE" = paste("spike-and-slab prior with",
                                     switch(x$prior.pois$slab,
-                                           "Normal" = paste(x$prior.pois$slab, " slab", sep=""),
-                                           "Student" = paste(x$prior.pois$slab, "-t slab", sep=""))),
+                                           "Normal" = paste0(x$prior.pois$slab, " slab"),
+                                           "Student" = paste0(x$prior.pois$slab, "-t slab")
+                                    )
+                     ),
                      "FALSE" = paste(switch(x$prior.pois$slab, 
-                                            "Normal" = paste(x$prior.pois$slab, " prior", sep=""),
-                                            "Student" = paste(x$prior.pois$slab, "-t prior", sep=""))
+                                            "Normal" = paste0(x$prior.pois$slab, " prior"),
+                                            "Student" = paste0(x$prior.pois$slab, "-t prior")
+                     )
                      )
     )
     
-
-    if (x$family=="pogit") cat("\n")
-    cat(paste("- Poisson: ", pr.txt, " [V=", x$prior.pois$V, "]\n", sep=""))
+    if (x$family=="pogit"){
+      cat("\n")
+      cat(paste0("- Poisson: ", pr.txt, " [V=", x$prior.pois$V, "]\n"))
+    } else {
+      cat(paste0(" ", pr.txt, " [V=", x$prior.pois$V, "]\n"))
+    }
+    
+    if (x$model.pois$d > 0){  
+      pM <- as.character(paste0("b0[", 0:(x$model.pois$d + x$model.pois$ri), "]"))
+      priorSet2 <- round(with(x$prior.pois, c(priorMean = c(unname(m0), unname(aj0)))), 3)
+      names(priorSet2) <- pM
+      cat("\n")
+      print(priorSet2)
+    }
+    
     priorSet <- with(x$prior.pois, 
                      c("w[a]" = unname(w[1]), "w[b]" = unname(w[2]),
                        "pi[a]" = unname(pi[1]), "pi[b]" = unname(pi[2]))
     )
-    print(priorSet)
-    
-    if (x$model.pois$d > 0){  
-      pM <- as.character(paste("b0[", 0:(x$model.pois$d + x$model.pois$ri), "]",sep=""))
-      priorSet2 <- round(with(x$prior.pois, c(priorMean = c(unname(m0), unname(aj0)))), 3)
-      names(priorSet2) <- pM
-      print(priorSet2)
-    }
-    
+    if (x$BVS) print(priorSet)
   }
-
+  
   if (x$family %in% c("logit", "pogit")){
     bvsl <- as.character(x$BVS)
     if (x$family=="pogit" && x$method=="infprior") bvsl <- "FALSE"
     pr.txt <- switch(bvsl,
-                     "TRUE" = paste("spike-and-slab prior with", 
-                                  switch(x$prior.logit$slab,
-                                         "Normal" = paste(x$prior.logit$slab, " slab", sep=""),
-                                         "Student" = paste(x$prior.logit$slab, "-t slab", sep=""))),
+                     "TRUE" = paste(" spike-and-slab prior with", 
+                                    switch(x$prior.logit$slab,
+                                           "Normal" = paste0(x$prior.logit$slab, " slab"),
+                                           "Student" = paste0(x$prior.logit$slab, "-t slab")
+                                    )
+                     ),
                      "FALSE" = paste(switch(x$prior.logit$slab,
-                                          "Normal" = paste(x$prior.logit$slab, " prior", sep=""),
-                                          "Student" = paste(x$prior.logit$slab, "-t prior", sep=""))
-                                     )
+                                            "Normal" = paste0(x$prior.logit$slab, " prior"),
+                                            "Student" = paste0(x$prior.logit$slab, "-t prior")
+                                    )
                      )
-
-    cat(paste("\n- Logit: ", pr.txt, " [V=", x$prior.logit$V, "]\n", sep=""))
+    )
+    
+    if (x$family == "pogit"){
+      cat("\n")
+      cat(paste0("- Logit: ", pr.txt, " [V=", x$prior.logit$V, "]\n"))
+    } else {
+      cat(paste0(" ", pr.txt, " [V=", x$prior.logit$V, "]\n"))
+    }
+    
     priorSet <- with(x$prior.logit, 
                      c("w[a]" = unname(w[1]), "w[b]" = unname(w[2]),
                        "pi[a]" = unname(pi[1]), "pi[b]" = unname(pi[2]))
-                     )
-    print(priorSet)
-  
+    )
+    
     if (x$model.logit$d > 0){               
-      pM <- as.character(paste("a0[", 0:(x$model.logit$d + x$model.logit$ri), "]", sep=""))
+      pM <- as.character(paste0("a0[", 0:(x$model.logit$d + x$model.logit$ri), "]"))
       priorSet2 <- round(with(x$prior.logit, c(priorMean = c(unname(m0), unname(aj0)))), 3)
       names(priorSet2) <- pM
+      cat("\n")
       print(priorSet2)
     }
+    
+    if (x$BVS) print(priorSet)  
   }
+  
+  if (x$family == "negbin"){
+    pr.txt <- switch(as.character(x$BVS),
+                     "TRUE" = paste("spike-and-slab prior with",
+                                    switch(x$prior.nb$slab,
+                                           "Normal" = paste0(x$prior.nb$slab, " slab"),
+                                           "Student" = paste0(x$prior.nb$slab, "-t slab")
+                                    )
+                     ),
+                     "FALSE" = paste(switch(x$prior.nb$slab, 
+                                            "Normal" = paste0(x$prior.nb$slab, " prior"),
+                                            "Student" = paste0(x$prior.nb$slab, "-t prior")
+                     )
+                     )
+    )
+    
+    cat(paste0(" ", pr.txt, " [V=", x$prior.nb$V, "]\n"))
+    
+    if (x$model.nb$d > 0){  
+      pM <- as.character(paste("b0[", 0:(x$model.nb$d), "]",sep=""))
+      priorSet2 <- round(with(x$prior.nb, c(priorMean = c(unname(m0), unname(aj0)))), 3)
+      names(priorSet2) <- pM
+      cat("\n")
+      print(priorSet2)
+    }
+    
+    if (x$BVS){
+      priorSet <- with(x$prior.nb, 
+                       c("w[a]" = unname(w[1]), "w[b]" = unname(w[2]))
+      )
+    } else priorSet <- NULL
+    
+    priorSet0 <- with(x$prior.nb, 
+                      c("c0" = unname(c0), "C0" = unname(C0))
+    )
+    
+    print(c(priorSet, priorSet0))
+  }
+  
   
   cat(paste(strwrap(paste(
     switch(as.character(x$BVS),
@@ -296,14 +418,14 @@ print.summary.pogit <- function(x, ...){
     cat("\n\n")
     print(x$iatTable)
   }
-
+  
   if (x$printRes && x$family=="pogit"){
     cat("\n\nEstimated reporting probabilities:\n")
     print(x$resTable$probs)
     cat("\n\nEstimated risks:\n")
     print(x$resTable$risks)
   }
-
+  
   cat("\n")
   invisible(x)  
 }

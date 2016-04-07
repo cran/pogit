@@ -13,11 +13,11 @@
 #' @usage data(cervical_validation)
 #' @format A data frame with 4 rows and 6 variables: 
 #' \describe{ 
-#'  \item{\code{v}}{Number of correct death certificates in each country 
+#'  \item{\code{v}}{number of correct death certificates in each country 
 #'    in the validation sample } 
-#'  \item{\code{m}}{Size of validation sample in each country} 
-#'  \item{\code{country}}{Factor variable of European countries} 
-#'  \item{\code{W.1}, \code{W.2}, \code{W.3}}{ Predictor variables for country effects 
+#'  \item{\code{m}}{size of validation sample in each country} 
+#'  \item{\code{country}}{factor variable of European countries} 
+#'  \item{\code{W.1}, \code{W.2}, \code{W.3}}{predictor variables for country effects 
 #'    using dummy coding (i.e. England, France, Italy)} 
 #'  }
 #'   
@@ -31,5 +31,6 @@
 #'   \emph{Applied Statistics}, \strong{40}, 81-93.
 #' @seealso \code{\link{cervical}}, \code{\link{pogitBvs}}
 #' @name cervical_validation
+#' @keywords datasets
 NULL
 

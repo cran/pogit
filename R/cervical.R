@@ -8,16 +8,16 @@
 #' @usage data(cervical)
 #' @format A data frame with 16 rows and 19 variables: 
 #' \describe{
-#'  \item{\code{y}}{Number of cervical cancer deaths for different age categories
+#'  \item{\code{y}}{number of cervical cancer deaths for different age categories
 #'    and European countries between 1969-1973}
-#'  \item{\code{E}}{Number of woman-years at risk (given in thousands)}
-#'  \item{\code{country}}{Factor variable of European countries}
-#'  \item{\code{agegroup}}{Factor variable of age categories}
-#'  \item{\code{X.1}, \code{X.2}, \code{X.3}}{Predictor variables for country effects
+#'  \item{\code{E}}{number of woman-years at risk (given in thousands)}
+#'  \item{\code{country}}{factor variable of European countries}
+#'  \item{\code{agegroup}}{factor variable of age categories}
+#'  \item{\code{X.1}, \code{X.2}, \code{X.3}}{predictor variables for country effects
 #'    using dummy coding (i.e. England, France, Italy)}
-#'  \item{\code{X.4}, \code{X.5}, \code{X.6}}{Predictor variables for age effects
+#'  \item{\code{X.4}, \code{X.5}, \code{X.6}}{predictor variables for age effects
 #'    using dummy coding (i.e. 35-44, 45-54, 55-64, in years)}
-#'  \item{\code{X.7}, \code{X.8}, \code{X.9}, \code{X.10}, \code{X.11}, \code{X.12}, \code{X.13}, \code{X.14}, \code{X.15}}{Predictor
+#'  \item{\code{X.7}, \code{X.8}, \code{X.9}, \code{X.10}, \code{X.11}, \code{X.12}, \code{X.13}, \code{X.14}, \code{X.15}}{predictor
 #'    variables for interaction effects of age and country}
 #' }
 #' 
@@ -29,6 +29,7 @@
 #'  \emph{Applied Statistics}, \strong{40}, 81-93. 
 #' @seealso \code{\link{cervical_validation}}, \code{\link{pogitBvs}}
 #' @name cervical
+#' @keywords datasets
 NULL
 
 

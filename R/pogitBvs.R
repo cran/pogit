@@ -1,7 +1,7 @@
 #' Bayesian variable selection for the Pogit model
 #' 
 #' This function performs Bayesian variable selection for a Poisson-Logistic (Pogit) 
-#' model with spike and slab priors. For posterior inference, a MCMC sampling scheme 
+#' model via spike and slab priors. For posterior inference, a MCMC sampling scheme 
 #' is used that relies on augmenting the observed data by the unobserved counts and 
 #' involves only Gibbs sampling steps. 
 #' 
@@ -32,8 +32,11 @@
 #' be included in both model parts of the Pogit model to account for dependence
 #' within clusters. Bayesian variance selection is applied to determine whether
 #' there is within-cluster dependence in either part of the model.  
+#' Note that an observation-specific random intercept in the
+#' Poisson sub-model yields an overdispersed Pogit model for unobserved
+#' heterogeneity.   
 #' 
-#' For details concerning the sampling algorithm see Dvorzak and Wagner (online first version).
+#' For details concerning the sampling algorithm see Dvorzak and Wagner (2016).
 #' 
 #' Details for the model specification (see arguments):  
 #' \describe{ 
@@ -159,7 +162,7 @@
 #'  \code{\link{print.pogit}}, \code{\link{summary.pogit}} and 
 #'  \code{\link{plot.pogit}}. 
 #' 
-#'  An object of class "\code{pogit}" is a list containing the following components:
+#'  An object of class "\code{pogit}" is a list containing the following elements:
 #'
 #'  \item{\code{samplesL}}{a named list containing the samples from the posterior
 #'    distribution of the parameters in the logit part of the joint model 
@@ -183,32 +186,35 @@
 #'    \item{\code{pgammaBeta}}{P(\eqn{\gamma_\beta}=1)}
 #'    \item{\code{bi}}{cluster-specific random intercept}
 #'    }}
-#'  \item{\code{data}}{a list containing the data \code{y}, \code{offset}, 
+#'  \item{\code{data}}{a list containing the data \code{y}, \code{E}, 
 #'    \code{X}, \code{W}, \code{val} and \code{subcat}}
-#'  \item{\code{model.logit}}{see \code{model} arguments}
-#'  \item{\code{model.pois}}{see \code{model} arguments}
-#'  \item{\code{mcmc}}{see \code{mcmc} arguments}
-#'  \item{\code{prior.logit}}{see \code{prior} arguments}
-#'  \item{\code{prior.pois}}{see \code{prior} arguments}
+#'  \item{\code{model.logit}}{a list containing details on the model specification in
+#'  the logit sub-model, see details for \code{model}}
+#'  \item{\code{model.pois}}{a list containing details on the model specification in
+#'  the Poisson sub-model, see details for \code{model}}
+#'  \item{\code{mcmc}}{see details for \code{mcmc}}
+#'  \item{\code{prior.logit}}{see details for \code{prior}}
+#'  \item{\code{prior.pois}}{see details for \code{prior}}
 #'  \item{\code{dur}}{a list containing the total runtime (\code{total}) 
 #'    and the runtime after burn-in (\code{durM}), in seconds}
 #'  \item{\code{BVS}}{see arguments}
 #'  \item{\code{method}}{see arguments}
-#'  \item{\code{start}}{see \code{start} arguments}
+#'  \item{\code{start}}{a list containing starting values, see arguments}
 #'  \item{\code{family}}{"pogit"}
 #'  \item{\code{call}}{function call}
 #' 
-#' @note If the argument \code{method} = "\code{infprior}", an 
+#' @note If \code{method} = "\code{infprior}", an 
 #' informative prior for the regression parameters in the logit model is 
 #' required to guarantee identification of the model parameters. 
 #' Otherwise, identification of the Pogit model may be weak and inference
 #' will be biased.
 #' 
 #' @seealso \code{\link{logitBvs}}, \code{\link{poissonBvs}} 
+#' @keywords models
 #'  
-#' @references Dvorzak, M. and Wagner, H. (online first version). Sparse Bayesian modelling
-#'  of underreported count data. \emph{Statistical Modelling}, 2015-06-18,
-#'  \url{http://dx.doi.org/10.1177/1471082x15588398}.
+#' @references Dvorzak, M. and Wagner, H. (2016). Sparse Bayesian modelling
+#'  of underreported count data. \emph{Statistical Modelling}, \strong{16}(1),
+#'  24 - 46, \url{http://dx.doi.org/10.1177/1471082x15588398}.
 #'
 #' @author Michaela Dvorzak <m.dvorzak@@gmx.at>, Helga Wagner
 #' @importFrom BayesLogit compute.mixture
@@ -219,7 +225,7 @@
 #' 
 #' @examples
 #' \dontrun{
-#' ## Examples below (except for example 3) should take 3-4 minutes. 
+#' ## Examples below (except for m3) should take 3-4 minutes. 
 #' 
 #' ## ------ (use simul1) ------
 #' # load simulated data set 'simul1'
@@ -296,7 +302,7 @@
 #' print(m4)
 #' # additionally compute estimated risks and reporting probabilities
 #' summary(m4, printRes = TRUE) 
-#' plot(m4, thin = FALSE)
+#' plot(m4, burnin = FALSE, thin = FALSE)
 #' plot(m4, type = "acf", lag.max = 50)
 #' 
 #' # informative prior instead of validation data (change prior settings)
@@ -312,7 +318,7 @@
 #'                mcmc = list(M = 10000, burnin = 2000, thin = 10))
 #' print(m5)
 #' summary(m5, printRes = TRUE)
-#' plot(m5)
+#' plot(m5, burnin = FALSE, thin = FALSE)
 #' plot(m5, type = "acf", lag.max = 50)
 #' }
 
@@ -348,19 +354,19 @@ pogitBvs <- function(y, E = NULL, X, W = NULL, validation = NULL,
   
   y <- as.integer(y)
   E <- as.integer(E)
-  if (!all(X[,1]==1)) X <- cbind(rep(1, dim(X)[1]), X)    
-  if (!all(W[,1]==1)) W <- cbind(rep(1, dim(W)[1]), W) 
+  if (!all(X[,1] == 1)) X <- cbind(rep(1, dim(X)[1]), X)    
+  if (!all(W[,1] == 1)) W <- cbind(rep(1, dim(W)[1]), W) 
   
   I <- length(y)
-  dB <- ncol(X)-1
-  dA <- ncol(W)-1
+  dB <- ncol(X) - 1
+  dA <- ncol(W) - 1
 
   colnames(X) <- paste("X", seq(0,dB), sep = "")
   colnames(W) <- paste("W", seq(0,dA), sep = "")
   
 
   ## validation data
-  if (method=="val"){
+  if (method == "val"){
     if (is.null(validation)){
       stop(paste(strwrap(paste("specify 'validation' data or use method 'infprior'."), 
                          exdent = 1), collapse = "\n"))
@@ -462,7 +468,7 @@ pogitBvs <- function(y, E = NULL, X, W = NULL, validation = NULL,
   if (length(model$subcat) != I) 
     stop("invalid specification of 'subcat'")
   
-  if (method=="infprior"){
+  if (method == "infprior"){
     if (!is.null(model$subcat)){
       validation <- as.data.frame(matrix(0, nlevels(model$subcat), 2))
     } else {
@@ -502,7 +508,7 @@ pogitBvs <- function(y, E = NULL, X, W = NULL, validation = NULL,
     )
   
 
-  if (model.pois$ri==1){
+  if (model.pois$ri == 1){
     if (!is.vector(model.pois$clusterID)){
       stop(paste(strwrap(paste("you must specify a cluster ID for random
                                 intercept selection in the Poisson sub-model"), 
@@ -526,9 +532,18 @@ pogitBvs <- function(y, E = NULL, X, W = NULL, validation = NULL,
     btilde <- Hp <- NULL        
   }
 
+  # specify function call for mcmc
+  fun_select <- "select_poisson"
+  txt_fun <- "Pogit"
+  if (model.pois$ri == 1){
+    if (nCp == length(y)){
+      fun_select <- "select_poissonOD"
+      txt_fun <- "overdispersed Pogit"
+    }
+  }
 
-  if (model.logit$ri==1){
-    if (method=="infprior"){
+  if (model.logit$ri == 1){
+    if (method == "infprior"){
       warning(simpleWarning(paste(strwrap(paste("random intercept term in the
                                                 logit sub-model is not supported
                                                 for method='infprior'"), 
@@ -602,13 +617,13 @@ pogitBvs <- function(y, E = NULL, X, W = NULL, validation = NULL,
     pi = prior$piBeta
   )
 
-  if (!all(prior.pois$aj0==0)){
+  if (!all(prior.pois$aj0 == 0)){
     prior.pois$slab <- "Normal"
     model.pois$deltafix <- matrix(1, 1, model.pois$d)
     if (model.pois$ri) model.pois$gammafix <- 1
   }
   
-  if (prior.pois$slab=="Normal"){
+  if (prior.pois$slab == "Normal"){
     prior.pois$psi.Q  <- prior.pois$V
     prior.pois$psi.nu <- NULL     
   } else {
@@ -629,7 +644,7 @@ pogitBvs <- function(y, E = NULL, X, W = NULL, validation = NULL,
                  )
        )
 
-  if (prior.pois$slab=="Student") with(prior.pois, stopifnot(psi.nu > 0))
+  if (prior.pois$slab == "Student") with(prior.pois, stopifnot(psi.nu > 0))
   if (length(prior.pois$aj0) != deffB)
     stop(paste(strwrap(paste("invalid specification of prior means 'bj0' for 
                              regression effects"), exdent = 1), collapse = "\n"))
@@ -649,9 +664,9 @@ pogitBvs <- function(y, E = NULL, X, W = NULL, validation = NULL,
     )
 
   # no validation data available for Pogit model
-  if (method=="infprior"){
+  if (method == "infprior"){
     prior.logit$M0 <- prior.logit$V
-    if (prior.logit$slab=="Student"){
+    if (prior.logit$slab == "Student"){
       warning(simpleWarning(paste("prior information is encoded in a 'N(a0,A0)' distribution")))  
       prior.logit$slab <- "Normal"
     }
@@ -661,7 +676,7 @@ pogitBvs <- function(y, E = NULL, X, W = NULL, validation = NULL,
       model.logit$gammafix <- 1                     
     #}
     
-    if (!(prior.logit$V < 0.01) || all(prior.logit$aj0==0)){
+    if (!(prior.logit$V < 0.01) || all(prior.logit$aj0 == 0)){
       warning(simpleWarning(paste(strwrap(paste("This method requires an informative prior 
                                                 to achieve parameter identification if
                                                 no validation data is available."),
@@ -670,13 +685,13 @@ pogitBvs <- function(y, E = NULL, X, W = NULL, validation = NULL,
   } 
 
   # prior information + validation data
-  if (method=="validation" &&  !all(prior.logit$aj0==0)){
+  if (method == "validation" &&  !all(prior.logit$aj0 == 0)){
     prior.logit$slab <- "Normal"
     model.logit$deltafix <- matrix(1, 1, model.logit$d)
     if (model.logit$ri) model.logit$gammafix <- 1
   }
 
-  if (prior.logit$slab=="Normal"){
+  if (prior.logit$slab == "Normal"){
     prior.logit$psi.Q  <- prior.logit$V
     prior.logit$psi.nu <- NULL      # removes psi.nu from list
   } else {
@@ -697,12 +712,12 @@ pogitBvs <- function(y, E = NULL, X, W = NULL, validation = NULL,
                  )
        )
 
-  if (prior.logit$slab=="Student") with(prior.logit, stopifnot(psi.nu > 0))
+  if (prior.logit$slab == "Student") with(prior.logit, stopifnot(psi.nu > 0))
   if (length(prior.logit$aj0) != deffA){
     stop(paste(strwrap(paste("invalid specification of prior means 'aj0' for 
                              regression effects"), exdent = 1), collapse = "\n"))
   }
-  if (model.logit$ri==1) prior.logit$invB0 <- diag(nCl)
+  if (model.logit$ri == 1) prior.logit$invB0 <- diag(nCl)
 
 
   #### MCMC sampling options
@@ -727,7 +742,7 @@ pogitBvs <- function(y, E = NULL, X, W = NULL, validation = NULL,
   
   with(mcmc,
        stopifnot(all(c(M, burnin, startsel, thin, verbose) >= c(1, 0, 1, 1, 0)),
-                 typeof(msave)=="logical")
+                 typeof(msave) == "logical")
   )
 
  
@@ -738,14 +753,14 @@ pogitBvs <- function(y, E = NULL, X, W = NULL, validation = NULL,
     mcmc$startsel <- mcmc$burnin/2 
   }
 
-  selP <- with(model.pois, sum(sum(deltafix) + sum(gammafix))==sum(d + ri))
-  selL <- with(model.logit, sum(sum(deltafix) + sum(gammafix))==sum(d + ri))
+  selP <- with(model.pois, sum(sum(deltafix) + sum(gammafix)) == sum(d + ri))
+  selL <- with(model.logit, sum(sum(deltafix) + sum(gammafix)) == sum(d + ri))
   if (BVS && method=="val" && any(c(selP, selL))){ 
     warning(simpleWarning(paste("invalid 'BVS' argument or selections specification:\n",
                                 "'BVS' is set to ", FALSE, sep = "")))    
     BVS <- FALSE
   }
-  if (BVS && method=="infprior" && selP){
+  if (BVS && method == "infprior" && selP){
     warning(simpleWarning(paste("invalid 'BVS' argument or selections specification:\n",
                                 "'BVS' is set to ", FALSE, sep = "")))    
     BVS <- FALSE    
@@ -770,7 +785,7 @@ pogitBvs <- function(y, E = NULL, X, W = NULL, validation = NULL,
   } else beta <- NULL
 
   if (is.null(start$alpha)){
-    if (method=="val"){
+    if (method == "val"){
         alphaStart <- glm(cbind(v, m - v) ~ W[, -1, drop=FALSE], 
                           family = binomial(), data = validation)
         alpha <- as.numeric(alphaStart$coefficients)
@@ -791,8 +806,8 @@ pogitBvs <- function(y, E = NULL, X, W = NULL, validation = NULL,
 
   # separation in the logit model
   # uses Firth's penalized-likelihood logistic regression from package 'logistf'
-  if (start$firth && method=="val"){ 
-    if (length(unique(validation$m))==1){
+  if (start$firth && method == "val"){ 
+    if (length(unique(validation$m)) == 1){
       bin <- c(apply(validation, 1, function(x){
         c(rep(1, x[1]), rep(0, x[2] - x[1]))
       }))  
@@ -821,14 +836,14 @@ pogitBvs <- function(y, E = NULL, X, W = NULL, validation = NULL,
   start$psiBeta    <- matrix(prior.pois$V, 1, deffB)  
   start$psiAlpha   <- matrix(prior.logit$V, 1, deffA)  
   start$omegaBeta <- start$omegaAlpha <- 1
-  if(model.pois$ri==1){
+  if(model.pois$ri == 1){
     start$gammaBeta <- start$pgammaBeta <- matrix(1, 1, model.pois$ri)   
     start$thetaBeta <- rnorm(model.pois$ri, 0, 0.1)
     start$piBeta    <- matrix(1, 1, model.pois$ri)
   } else {
     start$gammaBeta <- start$pgammaBeta <- start$thetaBeta <- start$piBeta <- NULL 
   }
-  if(model.logit$ri==1){
+  if(model.logit$ri == 1){
     start$gammaAlpha <- start$pgammaAlpha <- matrix(1, 1, model.logit$ri)   
     start$thetaAlpha <- rnorm(model.logit$ri, 0, 0.1)
     start$piAlpha    <- matrix(1, 1, model.logit$ri)
@@ -877,7 +892,7 @@ pogitBvs <- function(y, E = NULL, X, W = NULL, validation = NULL,
   } else {
     pdeltaBeta <- NULL
   }
-  if (model.pois$d > 0 && prior.pois$slab=="Student"){
+  if (model.pois$d > 0 && prior.pois$slab == "Student"){
     psiBeta   <- matrix(0, mcmc$nmc, deffB)
     colnames(psiBeta)   <- paste("psiB", seq_len(deffB), sep = ".")  
   } else {
@@ -890,7 +905,7 @@ pogitBvs <- function(y, E = NULL, X, W = NULL, validation = NULL,
     deltaBeta <- matrix(0, mcmc$nmc, model.pois$d) 
     colnames(deltaBeta) <- paste("deltaB", seq_len(model.pois$d), sep = ".")
   }
-  if (model.pois$ri==1){
+  if (model.pois$ri == 1){
     pgammaBeta <- thetaBeta <- matrix(0, mcmc$nmc, model.pois$ri)
     colnames(pgammaBeta) <- "pgammaB"
     colnames(thetaBeta)  <- "thetaB"
@@ -906,7 +921,7 @@ pogitBvs <- function(y, E = NULL, X, W = NULL, validation = NULL,
   }
 
   ## Logit part
-  alpha <- matrix(0, mcmc$nmc, model.logit$d+1)
+  alpha <- matrix(0, mcmc$nmc, model.logit$d + 1)
   colnames(alpha) <- paste("alpha", seq(0,model.logit$d), sep = ".")
 
   if (model.logit$d > 0){
@@ -915,20 +930,20 @@ pogitBvs <- function(y, E = NULL, X, W = NULL, validation = NULL,
   } else {
     pdeltaAlpha <- NULL
   }
-  if (model.logit$d > 0 && prior.logit$slab=="Student"){
+  if (model.logit$d > 0 && prior.logit$slab == "Student"){
     psiAlpha   <- matrix(0, mcmc$nmc, deffA)
     colnames(psiAlpha)   <- paste("psiA", seq_len(deffA), sep = ".")  
   } else {
     psiAlpha <- NULL
   }
 
-  if (mcmc$msave && method=="val" && model.pois$d > 0){
+  if (mcmc$msave && method == "val" && model.pois$d > 0){
     omegaAlpha <- matrix(0, mcmc$nmc, 1)
     colnames(omegaAlpha) <- "omegaAlpha"
     deltaAlpha <- matrix(0, mcmc$nmc, model.logit$d) 
     colnames(deltaAlpha) <- paste("deltaA", seq_len(model.logit$d), sep = ".")
   }
-  if (model.logit$ri==1){
+  if (model.logit$ri == 1){
     pgammaAlpha <- thetaAlpha <- matrix(0, mcmc$nmc, model.logit$ri)
     colnames(pgammaAlpha) <- "pgammaA"
     colnames(thetaAlpha)  <- "thetaA"
@@ -960,26 +975,26 @@ pogitBvs <- function(y, E = NULL, X, W = NULL, validation = NULL,
   for (imc in 1:mcmc$nmc){
   
     if (mcmc$verbose > 0){
-      if (imc==1) cat(paste("\nMCMC for Pogit model", txt.verbose, ":\n\n", sep = ""))
+      if (imc == 1) cat(paste("\nMCMC for the ", txt_fun, " model", txt.verbose, ":\n\n", sep = ""))
       if (is.element(imc, c(1:5, 10, 20, 50, 100, 200, 500))){
         cat("it =", imc, "/--- duration of MCMC so far:", 
             round(timediff <- proc.time()[3] - starttime, 2), "sec.,  expected time to end:", 
             round((timediff/(imc - 1) * mcmc$nmc - timediff)/60, 2), " min. \n")
         flush.console()
-      } else if (imc %% mcmc$verbose==0 && imc < mcmc$nmc){
+      } else if (imc %% mcmc$verbose == 0 && imc < mcmc$nmc){
         cat("it =", imc, "/--- duration of MCMC so far:", 
             round(timediff <- proc.time()[3] - starttime, 2), "sec.,  expected time to end:", 
             round((timediff/(imc - 1) * mcmc$nmc - timediff)/60, 2), " min. \n")
         flush.console()
       }
-      else if (imc==mcmc$nmc) {
+      else if (imc == mcmc$nmc) {
         cat("it =", imc, "/--- duration of MCMC (total):", 
             round(timediff <- proc.time()[3] - starttime, 2), "sec. \n \n")
         flush.console() 
       }
     }# end(verbose)
 
-    if (imc==(mcmc$burnin + 1)) starttimeM <- proc.time()[3]
+    if (imc == (mcmc$burnin + 1)) starttimeM <- proc.time()[3]
     
     ## step (1) --- sample the number of unreported cases
     d <- rpois(I, E*lambda*(1 - pS))
@@ -993,7 +1008,7 @@ pogitBvs <- function(y, E = NULL, X, W = NULL, validation = NULL,
                            prior.logit, mcmc, par.logit, imc)     
 
     muL <- W%*%par.logit$alpha
-    if (model.logit$ri==1){
+    if (model.logit$ri == 1){
       linp <- muL + par.logit$atilde[model.logit$Zl]*par.logit$theta  
     } else linp <- muL
     
@@ -1002,11 +1017,16 @@ pogitBvs <- function(y, E = NULL, X, W = NULL, validation = NULL,
     
     
     ## step (3) --- update Poisson part
-    par.pois <- select_poisson(n, X, E, Hp, mcomp, compmix.pois = NULL, cm1, model.pois,
-                            prior.pois, mcmc, par.pois, imc)
+    par.pois <- do.call(fun_select, args=list(y=n, X=X, offset=E, H=Hp, 
+                                              mcomp=mcomp, 
+                                              compmix.pois = NULL, 
+                                              cm1=cm1, model=model.pois,
+                                              prior=prior.pois, mcmc=mcmc,
+                                              param=par.pois, imc=imc)
+    )
       
     muP <- X%*%par.pois$beta
-    if (model.pois$ri==1){
+    if (model.pois$ri == 1){
       linp <- muP + par.pois$btilde[model.pois$Zp]*par.pois$theta
     } else linp <- muP
     
@@ -1019,7 +1039,7 @@ pogitBvs <- function(y, E = NULL, X, W = NULL, validation = NULL,
     alpha[imc,] <- par.logit$alpha
     if (model.logit$d > 0){
       pdeltaAlpha[imc,] <- par.logit$pdelta
-      if (prior.logit$slab=="Student") psiAlpha[imc,] <- par.logit$psi
+      if (prior.logit$slab == "Student") psiAlpha[imc,] <- par.logit$psi
     }
     
     if (mcmc$msave && model.logit$d > 0){
@@ -1027,12 +1047,12 @@ pogitBvs <- function(y, E = NULL, X, W = NULL, validation = NULL,
       deltaAlpha[imc,] <- par.logit$delta
     }
     
-    if (model.logit$ri==1){
+    if (model.logit$ri == 1){
       pgammaAlpha[imc] <- par.logit$pgamma
       thetaAlpha[imc]  <- par.logit$theta
       ai[imc,]         <- t(par.logit$atilde*par.logit$theta)
       
-      if (mcmc$msave && method=="val"){
+      if (mcmc$msave && method == "val"){
         piAlpha[imc] <- par.logit$pi
         gammaAlpha[imc] <- par.logit$gamma
       }
@@ -1049,7 +1069,7 @@ pogitBvs <- function(y, E = NULL, X, W = NULL, validation = NULL,
       deltaBeta[imc,] <- par.pois$delta
     }
   
-    if (model.pois$ri==1){
+    if (model.pois$ri == 1){
       pgammaBeta[imc] <- par.pois$pgamma
       thetaBeta[imc]  <- par.pois$theta
       bi[imc,]        <- t(par.pois$btilde*par.pois$theta)
@@ -1088,11 +1108,11 @@ pogitBvs <- function(y, E = NULL, X, W = NULL, validation = NULL,
   }
 
   ret <- list(samplesL = samplesL, samplesP = samplesP, 
-              data = list(y = y, offset = E, X = X, W = W, val = validation, 
+              data = list(y = y, E = E, X = X, W = W, val = validation, 
                           subcat = model$subcat), model.logit = model.logit, 
               model.pois = model.pois, mcmc = mcmc, prior.logit = prior.logit, 
               prior.pois = prior.pois, dur = dur, BVS = BVS, method = method, 
-              start = start, family = "pogit", call = cl) 
+              start = start, family = "pogit", call = cl, fun = fun_select) 
   class(ret) <- "pogit"
   return(ret)
 }

@@ -1,7 +1,7 @@
 #' Bayesian variable selection for the binomial logit model
 #' 
 #' This function performs Bayesian variable selection for binomial logit regression
-#' models with spike and slab priors. A cluster-specific random intercept can be included 
+#' models via spike and slab priors. A cluster-specific random intercept can be included 
 #' in the model to account for within-cluster dependence with variance selection of 
 #' the random intercept to determine whether there is between-cluster variation 
 #' in the model. For posterior inference, a MCMC sampling algorithm is used which 
@@ -29,7 +29,7 @@
 #' the mixture parameters are taken from the R package \code{binomlogit}. 
 #' See Fussl (2014) for details. 
 #' 
-#' For details concerning the sampling algorithm see Dvorzak and Wagner (online first version) 
+#' For details concerning the sampling algorithm see Dvorzak and Wagner (2016) 
 #' and Wagner and Duller (2012). 
 #' 
 #' 
@@ -102,10 +102,11 @@
 #'  \code{\link{print.pogit}}, \code{\link{summary.pogit}} and 
 #'  \code{\link{plot.pogit}}. 
 #' 
-#'  An object of class "\code{pogit}" is a list containing the following components: 
+#'  The returned object is a list containing the following elements: 
 #' 
 #'  \item{\code{samplesL}}{a named list containing the samples from the posterior
-#'    distribution of the parameters (see also \code{msave}): 
+#'    distribution of the parameters in the binomial logit model 
+#'    (see also \code{msave}): 
 #'    \describe{
 #'    \item{\code{alpha, thetaAlpha}}{regression coefficients \eqn{\alpha} and
 #'    \eqn{\theta_\alpha}}
@@ -115,28 +116,30 @@
 #'    \item{\code{ai}}{cluster-specific random intercept}
 #'    }}
 #'  \item{\code{data}}{a list containing the data \code{y}, \code{N} and \code{X}}
-#'  \item{\code{model.logit}}{see \code{model} arguments}
-#'  \item{\code{mcmc}}{see \code{mcmc} arguments}
-#'  \item{\code{prior.logit}}{see \code{prior} arguments}
+#'  \item{\code{model.logit}}{a list containing details on the model specification, 
+#'  see details for \code{model}}
+#'  \item{\code{mcmc}}{see details for \code{mcmc}}
+#'  \item{\code{prior.logit}}{see details for \code{prior}}
 #'  \item{\code{dur}}{a list containing the total runtime (\code{total}) 
 #'    and the runtime after burn-in (\code{durM}), in seconds}
 #'  \item{\code{BVS}}{see arguments}
-#'  \item{\code{start}}{see arguments}
+#'  \item{\code{start}}{a list containing starting values, see arguments}
 #'  \item{\code{family}}{"logit"}
 #'  \item{\code{call}}{function call}
 #' 
 #' @note If prior information on the regression parameters is available, this
-#'  prior information is encoded in a normal distribution instead of the 
+#'  information is encoded in a normal distribution instead of the 
 #'  spike and slab prior (\code{BVS} is set to \code{FALSE}). 
 #'  
 #'  For binary observations, a vector of ones for the number of trials \code{N}
 #'  is required. 
 #' 
 #' @seealso \code{\link{pogitBvs}}
+#' @keywords models
 #'  
-#' @references Dvorzak, M. and Wagner, H. (online first version). Sparse Bayesian modelling
-#'  of underreported count data. \emph{Statistical Modelling}, 2015-06-18,
-#'  \url{http://dx.doi.org/10.1177/1471082x15588398}.
+#' @references Dvorzak, M. and Wagner, H. (2016). Sparse Bayesian modelling
+#'  of underreported count data. \emph{Statistical Modelling}, \strong{16}(1),
+#'  24 - 46, \url{http://dx.doi.org/10.1177/1471082x15588398}.
 #' @references Fussl, A., Fruehwirth-Schnatter, S. and Fruehwirth, R. (2013). 
 #'   Efficient MCMC for Binomial Logit Models. \emph{ACM Transactions on 
 #'   Modeling and Computer Simulation}, 23, \strong{1}, Article 3, 1-21.
@@ -208,7 +211,7 @@ logitBvs <- function(y, N, X, model = list(), prior = list(),  mcmc = list(),
     
   y <- as.integer(y)
   N <- as.integer(N) 
-  if (!all(X[, 1]==1)) X <- cbind(rep(1, dim(X)[1]), X)    
+  if (!all(X[, 1] == 1)) X <- cbind(rep(1, dim(X)[1]), X)    
   if (any((N - y < 0))) stop("number of trials 'N' < number of binomial counts 'y'")  
     
   if (any(N==0)){   # only non-zero trials
@@ -256,7 +259,7 @@ logitBvs <- function(y, N, X, model = list(), prior = list(),  mcmc = list(),
   if (length(model$gammafix)>1 || !(model$gammafix %in% c(0, 1)) || !(model$ri %in% c(0, 1)))
       stop("invalid specification of random intercept selection")
       
-  if (model$ri==1){
+  if (model$ri == 1){
       if (!is.vector(model$clusterID)){
         stop("you must specify a cluster ID for random intercept selection")
       }
@@ -264,7 +267,7 @@ logitBvs <- function(y, N, X, model = list(), prior = list(),  mcmc = list(),
         stop("specify the cluster ID as c = 1,...,C")
       }
       # random intercept model specification
-      if (any(N==0)) model$clusterID <- model$clusterID[-iN0]
+      if (any(N == 0)) model$clusterID <- model$clusterID[-iN0]
       if (length(model$clusterID) != n){
         stop("'y' and 'clusterID' must have same length")
       }
@@ -273,7 +276,7 @@ logitBvs <- function(y, N, X, model = list(), prior = list(),  mcmc = list(),
       atilde <- rnorm(nC, 0, 1)
       H <- matrix(0, n, nC)
       for (i in 1:nC){
-        H[which(model$Zl==i), i] <- 1
+        H[which(model$Zl == i), i] <- 1
       }
   } else {
       atilde <- H <- NULL      
@@ -297,7 +300,7 @@ logitBvs <- function(y, N, X, model = list(), prior = list(),  mcmc = list(),
     )
     
   prior <- modifyList(defaultPrior, as.list(prior))
-  if (!all(prior$aj0==0)){
+  if (!all(prior$aj0 == 0)){
     prior$slab <- "Normal"
     if (BVS){
       warning(simpleWarning(paste(strwrap(paste("BVS is not performed if prior
@@ -310,7 +313,7 @@ logitBvs <- function(y, N, X, model = list(), prior = list(),  mcmc = list(),
     }
   }
 
-  if (prior$slab=="Normal"){
+  if (prior$slab == "Normal"){
     prior$psi.Q  <- prior$V
     prior$psi.nu <- NULL      
   } else {
@@ -330,7 +333,7 @@ logitBvs <- function(y, N, X, model = list(), prior = list(),  mcmc = list(),
         )
   )
     
-  if (prior$slab=="Student") with(prior, stopifnot(psi.nu > 0))
+  if (prior$slab == "Student") with(prior, stopifnot(psi.nu > 0))
   if (length(prior$aj0) != deff)
       stop("invalid specification of prior means for regression effects")
   if (model$ri==1) prior$invB0 <- diag(nC)
@@ -359,7 +362,7 @@ logitBvs <- function(y, N, X, model = list(), prior = list(),  mcmc = list(),
     
   with(mcmc,
         stopifnot(all(c(M, burnin, startsel, thin, verbose) >= c(1, 0, 1, 1, 0)),
-                  typeof(msave)=="logical")
+                  typeof(msave) == "logical")
         )
     
   if (typeof(BVS) != "logical") stop("invalid 'BVS' argument")    
@@ -368,7 +371,7 @@ logitBvs <- function(y, N, X, model = list(), prior = list(),  mcmc = list(),
                                 "'startsel' was set to ", mcmc$burnin/2, sep = "")))
     mcmc$startsel <- mcmc$burnin/2 
   }
-  if (BVS && sum(sum(model$deltafix) + sum(model$gammafix))==sum(model$d + model$ri)){
+  if (BVS && sum(sum(model$deltafix) + sum(model$gammafix)) == sum(model$d + model$ri)){
     warning(simpleWarning(paste("invalid 'BVS' argument:\n",
                                 "'BVS' was set to ", FALSE, sep="")))
     BVS <- FALSE
@@ -449,7 +452,7 @@ logitBvs <- function(y, N, X, model = list(), prior = list(),  mcmc = list(),
     deltaAlpha <- matrix(0, mcmc$nmc, model$d) 
     colnames(deltaAlpha) <- paste("deltaA", seq_len(model$d), sep = ".")
   }
-  if (model$ri==1){
+  if (model$ri == 1){
     pgammaAlpha <- thetaAlpha <- matrix(0, mcmc$nmc, model$ri)
     colnames(pgammaAlpha) <- "pgammaA"
     colnames(thetaAlpha)  <- "theta"
@@ -470,19 +473,19 @@ logitBvs <- function(y, N, X, model = list(), prior = list(),  mcmc = list(),
   for (imc in 1:mcmc$nmc){
 
     if (mcmc$verbose > 0){
-      if (imc==1) cat(paste("\nMCMC for binomial logit model", txt.verbose, ":\n\n", sep = ""))
+      if (imc == 1) cat(paste("\nMCMC for the binomial logit model", txt.verbose, ":\n\n", sep = ""))
       if (is.element(imc, c(1:5, 10, 20, 50, 100, 200, 500))){
         cat("it =", imc, "/--- duration of MCMC so far:", 
         round(timediff <- proc.time()[3] - starttime, 2), "sec.,  expected time to end:", 
         round((timediff/(imc - 1) * mcmc$nmc - timediff)/60, 2), " min. \n")
         flush.console()
-      } else if (imc %% mcmc$verbose==0 && imc < mcmc$nmc){
+      } else if (imc %% mcmc$verbose == 0 && imc < mcmc$nmc){
           cat("it =", imc, "/--- duration of MCMC so far:", 
           round(timediff <- proc.time()[3] - starttime, 2), "sec.,  expected time to end:", 
           round((timediff/(imc - 1) * mcmc$nmc - timediff)/60, 2), " min. \n")
           flush.console()
       }
-      else if (imc==mcmc$nmc) {
+      else if (imc == mcmc$nmc) {
         cat("it =", imc, "/--- duration of MCMC (total):", 
         round(timediff <- proc.time()[3] - starttime, 2), "sec. \n \n")
         flush.console() 
@@ -490,7 +493,7 @@ logitBvs <- function(y, N, X, model = list(), prior = list(),  mcmc = list(),
     }# end(verbose)
       
       
-    if (imc==(mcmc$burnin + 1)) starttimeM <- proc.time()[3] 
+    if (imc == (mcmc$burnin + 1)) starttimeM <- proc.time()[3] 
     
     ## update 
     par.logit <- select_logit(y, N, W, H, compmix.bin, model, prior, mcmc, par.logit, imc) 
@@ -508,12 +511,12 @@ logitBvs <- function(y, N, X, model = list(), prior = list(),  mcmc = list(),
       deltaAlpha[imc,] <- par.logit$delta
     }
       
-    if(model$ri==1){
+    if (model$ri == 1){
       pgammaAlpha[imc] <- par.logit$pgamma
       thetaAlpha[imc]  <- par.logit$theta
       ai[imc,]         <- t(par.logit$atilde*par.logit$theta)
         
-      if(mcmc$msave){
+      if (mcmc$msave){
         piAlpha[imc] <- par.logit$pi
         gammaAlpha[imc] <- par.logit$gamma
       }
@@ -525,7 +528,7 @@ logitBvs <- function(y, N, X, model = list(), prior = list(),  mcmc = list(),
   durM <- finish - starttimeM
   dur  <- list(total = durT, durM = durM) 
     
-  samplesL <- if(mcmc$msave){
+  samplesL <- if (mcmc$msave){
     list(alpha = alpha, pdeltaAlpha = pdeltaAlpha, psiAlpha = psiAlpha, 
          omegaAlpha = omegaAlpha, deltaAlpha = deltaAlpha, 
          thetaAlpha = thetaAlpha, pgammaAlpha = pgammaAlpha, ai = ai,

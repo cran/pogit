@@ -1,6 +1,6 @@
 #### (invisible function)
 #### sub-function "draw_indicators()" for select_logit() and select_pois()
-#### last version: 2015/03/11
+#### last version: 2016/03/24
 #### This function is not meant to be called directly by the user. 
 
 #### Sample the vector of indicators for regression effects (for BVS)
@@ -40,7 +40,7 @@ draw_indicators <- function(y, X, delta, gamma, omega, pi, model, prior, invA0){
       for (ii in 0:1){
         delta.new[j] <- ii
         lprior       <- ii*log(omega) + (1 - ii)*log(1 - omega) 
-        if (model$ri==0){
+        if (model$ri == 0){
           llik <- lmarglik(y, X, delta.new, prior$a0, invA0)
         } else {
           llik <- lmarglik(y, X, c(delta.new, gamma), prior$a0, invA0)
@@ -60,8 +60,8 @@ draw_indicators <- function(y, X, delta, gamma, omega, pi, model, prior, invA0){
   }
   
   ## update indicator for random intercept variance parameter
-  if (model$ri==1){
-    if (model$gammafix==0){
+  if (model$ri == 1){
+    if (model$gammafix == 0){
       gamma.new <- gamma
       lpg <- matrix(0, 2, 1)
       
@@ -90,9 +90,50 @@ draw_indicators <- function(y, X, delta, gamma, omega, pi, model, prior, invA0){
 }
 
 
+
+draw_indicators_nb <- function(y, X, delta, omega, model, prior, invA0){
+  
+  nDelta <- model$d - sum(model$deltafix)
+  
+  ## update indicators for regression effects
+  if (nDelta > 0){
+    iDel <- which(model$deltafix == 0)  
+    ranOrdDelta <- sample(nDelta)
+    pdelta <- matrix(NA, 1, model$d)
+    pdelta[which(model$deltafix==1)] <- 1
+    
+    for (i in 1:nDelta){
+      j         <- iDel[ranOrdDelta[i]]
+      delta.new <- delta
+      lp <- matrix(0, 2, 1)
+      
+      for (ii in 0:1){
+        delta.new[j] <- ii
+        lprior       <- ii*log(omega) + (1 - ii)*log(1 - omega) 
+        llik <- lmarglik(y, X, delta.new, prior$a0, invA0)
+        lp[ii+1] <- llik + lprior
+      }
+      maxL  <- max(lp)
+      l     <- exp(lp-maxL)
+      lprob <- l/sum(l) 
+      
+      deltaj <- runif(1) > lprob[1]
+      if (deltaj != delta[j]) delta[j] <- deltaj
+      pdelta[j] <- lprob[2]
+    }    
+  } else {
+    pdelta <- NULL
+  }
+  
+  return(list(deltanew = delta, pdeltanew = pdelta))
+}
+
+
+
+
 #### (invisible function)
 #### sub-function "lmarglik()" for select_logit() and select_poisson()
-#### last version: 2015/03/11
+#### last version: 2016/03/24
 #### This function is not meant to be called directly by the user. 
 
 #### Compute marginal likelihood of a Gaussion regression model
@@ -115,7 +156,8 @@ lmarglik <- function(y, X, ind, a0prior, iA0){
   apost <- invA0%*%a0 + t(Xsel)%*%y       # apost=Apost*(A0^-1*a0 + Z*'Sigma^-1*y) 
   
   # conditional (log) marginal likelihood 
-  h <- log(det(Apost))-(-log(det(invA0)))
+  #h <- log(det(Apost))-(-log(det(invA0)))
+  h <- 2*log(det(chol(Apost))) - (-log(det(invA0)))
   Q <- t(y)%*%y - t(apost)%*%Apost%*%apost + t(a0)%*%invA0%*%a0 
   lml <- 0.5*(h - Q)
   
@@ -139,9 +181,9 @@ draw_psi <- function(alpha, index, prior){
   d <- length(alpha)
   psiv <- matrix(0, d, 1) 
   
-  if (prior$slab=="Student"){
+  if (prior$slab == "Student"){
     psiv <- 1/rgamma(d, shape = prior$psi.nu + t(index)/2, rate = (prior$psi.Q + 0.5*alpha^2))
-  } else if (prior$slab=="Normal"){
+  } else if (prior$slab == "Normal"){
     psiv <- prior$psi.Q*matrix(1, d, 1)
   }
   
