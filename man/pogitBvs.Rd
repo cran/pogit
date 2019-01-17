@@ -4,9 +4,9 @@
 \alias{pogitBvs}
 \title{Bayesian variable selection for the Pogit model}
 \usage{
-pogitBvs(y, E = NULL, X, W = NULL, validation = NULL, method = "val",
-  model = list(), prior = list(), mcmc = list(), start = list(),
-  BVS = TRUE)
+pogitBvs(y, E = NULL, X, W = NULL, validation = NULL,
+  method = "val", model = list(), prior = list(), mcmc = list(),
+  start = list(), BVS = TRUE)
 }
 \arguments{
 \item{y}{an integer vector of observed counts for units i = 1,...,I}
@@ -330,9 +330,6 @@ plot(m5, burnin = FALSE, thin = FALSE)
 plot(m5, type = "acf", lag.max = 50)
 }
 }
-\author{
-Michaela Dvorzak <m.dvorzak@gmx.at>, Helga Wagner
-}
 \references{
 Dvorzak, M. and Wagner, H. (2016). Sparse Bayesian modelling
  of underreported count data. \emph{Statistical Modelling}, \strong{16}(1),
@@ -341,5 +338,7 @@ Dvorzak, M. and Wagner, H. (2016). Sparse Bayesian modelling
 \seealso{
 \code{\link{logitBvs}}, \code{\link{poissonBvs}}
 }
+\author{
+Michaela Dvorzak <m.dvorzak@gmx.at>, Helga Wagner
+}
 \keyword{models}
-

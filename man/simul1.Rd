@@ -39,4 +39,3 @@ Dvorzak and Wagner (2016).
 \code{\link{pogitBvs}}
 }
 \keyword{datasets}
-

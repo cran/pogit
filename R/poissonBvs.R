@@ -157,7 +157,6 @@
 #'   Statistics and Data Analysis}, \strong{56}, 1256 - 1274.
 #'   
 #' @author Michaela Dvorzak <m.dvorzak@@gmx.at>, Helga Wagner
-#' @importFrom BayesLogit compute.mixture
 #' @importFrom plyr rbind.fill
 #' @import stats
 #' @import utils

@@ -217,7 +217,6 @@
 #'  24 - 46, \url{http://dx.doi.org/10.1177/1471082x15588398}.
 #'
 #' @author Michaela Dvorzak <m.dvorzak@@gmx.at>, Helga Wagner
-#' @importFrom BayesLogit compute.mixture
 #' @importFrom plyr rbind.fill
 #' @import stats
 #' @import utils

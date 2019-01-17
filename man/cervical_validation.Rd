@@ -43,4 +43,3 @@ Belgium is used as the reference category.
 \code{\link{cervical}}, \code{\link{pogitBvs}}
 }
 \keyword{datasets}
-

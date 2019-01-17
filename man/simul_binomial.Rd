@@ -26,4 +26,3 @@ parameter \eqn{\exp(\alpha)/(1+\exp(\alpha))}*100.
 \code{\link{logitBvs}}
 }
 \keyword{datasets}
-

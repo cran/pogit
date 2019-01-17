@@ -4,6 +4,14 @@
 \title{NEWS for Package \pkg{pogit}}
 
 
+\section{Changes in version 1.2.0}{
+  \itemize{
+    \item New (invisible) function 'compute_mixture' since 'compute.mixture' from
+    package BayesLogit (archived) is no longer supported. 
+    \item DESCRIPTION file: Imports changed (BayesLogit removed)
+  }
+}
+
 \section{Changes in version 1.1.0}{
   \itemize{
     \item New function 'negbinBvs' to deal with overdispersion of count data (and all affected functions). 

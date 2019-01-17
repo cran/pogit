@@ -145,7 +145,7 @@
 #'   Modeling and Computer Simulation}, 23, \strong{1}, Article 3, 1-21.
 #' @references Fussl, A. (2014). \code{binomlogit}: Efficient MCMC for Binomial 
 #'   Logit Models. R package version 1.2, 
-#'   \url{http://CRAN.R-project.org/package=binomlogit}.
+#'   \url{https://CRAN.R-project.org/package=binomlogit}.
 #' @references Wagner, H. and Duller, C. (2012). Bayesian model selection for 
 #'   logistic regression models with random intercept. \emph{Computational 
 #'   Statistics and Data Analysis}, \strong{56}, 1256-1274.

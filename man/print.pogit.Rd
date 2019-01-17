@@ -23,4 +23,3 @@ MCMC options and the runtime used for the sampling algorithm. See
 \author{
 Michaela Dvorzak <m.dvorzak@gmx.at>
 }
-

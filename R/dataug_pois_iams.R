@@ -1,6 +1,6 @@
 #### (invisible function)
 #### sub-function "get_mixcomp()" for select_poisson()
-#### last version: 2015/03/26
+#### last version: 2019/01/07
 #### This function is not meant to be called directly by the user. 
 
 get_mixcomp <- function(y, mcomp){  
@@ -17,7 +17,7 @@ get_mixcomp <- function(y, mcomp){
     wy <- mcomp$w[ygz,]    
   } else {
     comp.m <- lapply(ygz, function(x){
-      m <- compute.mixture(x, type = "log.gamma")$m
+      m <- compute_mixture(x, mcomp)$m
       return(as.data.frame(t(m)))
     })
     my <- as.matrix(do.call(rbind.fill, comp.m))
@@ -28,7 +28,7 @@ get_mixcomp <- function(y, mcomp){
     }
     
     comp.v <- lapply(ygz, function(x){
-      v <- compute.mixture(x, type = "log.gamma")$v
+      v <- compute_mixture(x, mcomp)$v
       return(as.data.frame(t(v)))
     })
     vy <- as.matrix(do.call(rbind.fill, comp.v))
@@ -39,7 +39,7 @@ get_mixcomp <- function(y, mcomp){
     }  
     
     comp.w <- lapply(ygz, function(x){
-      w <- compute.mixture(x, type = "log.gamma")$p
+      w <- compute_mixture(x, mcomp)$w
       return(as.data.frame(t(w)))
     })
     wy <- as.matrix(do.call(rbind.fill, comp.w))

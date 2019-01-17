@@ -45,4 +45,3 @@ For details concerning the simulation setup, see Dvorzak and Wagner (2016).
 \code{\link{pogitBvs}}
 }
 \keyword{datasets}
-

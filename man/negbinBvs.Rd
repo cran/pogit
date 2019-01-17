@@ -207,9 +207,6 @@ plot(m5, burnin = FALSE, thin = FALSE)
 plot(m5, type = "acf", lag.max = 50)
 }
 }
-\author{
-Michaela Dvorzak <m.dvorzak@gmx.at>
-}
 \references{
 Dvorzak, M. and Wagner, H. (2016b). Bayesian inference for 
 overdispersed count data subject to underreporting - An application to
@@ -222,5 +219,7 @@ Fruehwirth-Schnatter, S., Fruehwirth, R., Held, L. and Rue, H.
 \seealso{
 \code{\link{poissonBvs}}
 }
+\author{
+Michaela Dvorzak <m.dvorzak@gmx.at>
+}
 \keyword{models}
-

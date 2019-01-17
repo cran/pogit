@@ -41,4 +41,3 @@ The lowest age category (25-34) in Belgium is used as the reference category.
 \code{\link{cervical_validation}}, \code{\link{pogitBvs}}
 }
 \keyword{datasets}
-

@@ -186,9 +186,6 @@ plot(m3, burnin = FALSE, maxPlots = 4)
 plot(m3, type = "acf", maxPlots = 4)       
 }
 }
-\author{
-Michaela Dvorzak <m.dvorzak@gmx.at>, Helga Wagner
-}
 \references{
 Dvorzak, M. and Wagner, H. (2016). Sparse Bayesian modelling
  of underreported count data. \emph{Statistical Modelling}, \strong{16}(1),
@@ -200,7 +197,7 @@ Fussl, A., Fruehwirth-Schnatter, S. and Fruehwirth, R. (2013).
 
 Fussl, A. (2014). \code{binomlogit}: Efficient MCMC for Binomial 
   Logit Models. R package version 1.2, 
-  \url{http://CRAN.R-project.org/package=binomlogit}.
+  \url{https://CRAN.R-project.org/package=binomlogit}.
 
 Wagner, H. and Duller, C. (2012). Bayesian model selection for 
   logistic regression models with random intercept. \emph{Computational 
@@ -209,5 +206,7 @@ Wagner, H. and Duller, C. (2012). Bayesian model selection for
 \seealso{
 \code{\link{pogitBvs}}
 }
+\author{
+Michaela Dvorzak <m.dvorzak@gmx.at>, Helga Wagner
+}
 \keyword{models}
-

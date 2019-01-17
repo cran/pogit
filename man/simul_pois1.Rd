@@ -23,4 +23,3 @@ and four binary with \eqn{p(x_i)=0.5}. The regression effects are set to
 \code{\link{poissonBvs}}
 }
 \keyword{datasets}
-

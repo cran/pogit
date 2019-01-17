@@ -28,4 +28,3 @@ from a normal distribution with zero mean and standard deviation
 \code{\link{simul_pois1}}, \code{\link{poissonBvs}}
 }
 \keyword{datasets}
-

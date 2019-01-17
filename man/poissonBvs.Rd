@@ -228,9 +228,6 @@ summary(m6)
 plot(m6, maxPlots = 4)
 }
 }
-\author{
-Michaela Dvorzak <m.dvorzak@gmx.at>, Helga Wagner
-}
 \references{
 Dvorzak, M. and Wagner, H. (2016). Sparse Bayesian modelling
  of underreported count data. \emph{Statistical Modelling}, \strong{16}(1),
@@ -251,5 +248,7 @@ Wagner, H. and Duller, C. (2012). Bayesian model selection for
 \seealso{
 \code{\link{pogitBvs}}, \code{\link{negbinBvs}}
 }
+\author{
+Michaela Dvorzak <m.dvorzak@gmx.at>, Helga Wagner
+}
 \keyword{models}
-

@@ -128,7 +128,6 @@
 #'   non-Gaussian data. \emph{Statistics and Computing}, \strong{19}, 479 - 492.
 #'    
 #' @author Michaela Dvorzak <m.dvorzak@@gmx.at>
-#' @importFrom BayesLogit compute.mixture
 #' @importFrom plyr rbind.fill
 #' @import stats
 #' @import utils
