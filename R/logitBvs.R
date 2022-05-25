@@ -33,9 +33,10 @@
 #' and Wagner and Duller (2012). 
 #' 
 #' 
-#' Details for the model specification (see arguments): 
+#' Details for model specification (see arguments): 
 #' \describe{ 
-#'  \item{\code{model}}{\describe{\item{}{A list:}
+#'  \item{\code{model}:}{
+#'  \describe{
 #'    \item{\code{deltafix}}{an indicator vector of length \code{ncol(X)-1} 
 #'    specifying which regression effects are subject to selection (i.e., 0 =
 #'    subject to selection, 1 = fix in the model); defaults to a vector of zeros.} 
@@ -49,7 +50,8 @@
 #'    of observations containing the cluster ID c = 1,...,C for each observation 
 #'    (required if \code{ri=TRUE}).} 
 #'  }}
-#'  \item{\code{prior}}{\describe{\item{}{A list:}
+#'  \item{\code{prior}:}{
+#'  \describe{
 #'   \item{\code{slab}}{distribution of the slab component, i.e. "\code{Student}" 
 #'    (default) or "\code{Normal}".}
 #'    \item{\code{psi.nu}}{hyper-parameter of the Student-t slab (used for a 
@@ -66,7 +68,8 @@
 #'    \eqn{\pi}; defaults to \code{c(pa0=1, pb0=1)}, i.e. a uniform 
 #'    distribution.}
 #'  }}
-#'  \item{\code{mcmc}}{\describe{\item{}{A list:}
+#'  \item{\code{mcmc}:}{
+#'  \describe{
 #'    \item{\code{M}}{number of MCMC iterations after the burn-in phase; defaults 
 #'    to 8000.} 
 #'    \item{\code{burnin}}{number of MCMC iterations discarded as burn-in; 
@@ -139,7 +142,7 @@
 #'  
 #' @references Dvorzak, M. and Wagner, H. (2016). Sparse Bayesian modelling
 #'  of underreported count data. \emph{Statistical Modelling}, \strong{16}(1),
-#'  24 - 46, \url{http://dx.doi.org/10.1177/1471082x15588398}.
+#'  24 - 46, \doi{10.1177/1471082x15588398}.
 #' @references Fussl, A., Fruehwirth-Schnatter, S. and Fruehwirth, R. (2013). 
 #'   Efficient MCMC for Binomial Logit Models. \emph{ACM Transactions on 
 #'   Modeling and Computer Simulation}, 23, \strong{1}, Article 3, 1-21.

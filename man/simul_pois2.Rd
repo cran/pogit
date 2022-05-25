@@ -4,13 +4,15 @@
 \name{simul_pois2}
 \alias{simul_pois2}
 \title{Simulated data set}
-\format{A data frame with 300 rows and the following 12 variables: 
+\format{
+A data frame with 300 rows and the following 12 variables: 
 \describe{
  \item{\code{y}}{number of counts for each covariate pattern in each cluster}
  \item{\code{cID}}{cluster ID of each count}
  \item{\code{X.0}}{intercept}
  \item{\code{X.1}, \code{X.2}, \code{X.3}, \code{X.4}, \code{X.5}, \code{X.6}, \code{X.7}, \code{X.8}, \code{X.9}, \code{X.10}}{covariates}
-}}
+}
+}
 \usage{
 data(simul_pois2)
 }

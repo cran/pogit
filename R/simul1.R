@@ -27,7 +27,7 @@
 #' 
 #' @source Dvorzak, M. and Wagner, H. (2016). Sparse Bayesian modelling
 #'  of underreported count data. \emph{Statistical Modelling}, \strong{16}(1),
-#'  24 - 46, \url{http://dx.doi.org/10.1177/1471082x15588398}.  
+#'  24 - 46, \doi{10.1177/1471082x15588398}.  
 #'  
 #' @seealso \code{\link{pogitBvs}}
 #' @name simul1

@@ -33,9 +33,10 @@
 #' For details concerning the sampling algorithm, see Dvorzak and Wagner (2016) 
 #' and Wagner and Duller (2012). 
 #' 
-#' Details for the model specification (see arguments): 
+#' Details for model specification (see arguments): 
 #' \describe{ 
-#'  \item{\code{model}}{\describe{\item{}{A list:}  
+#'  \item{\code{model}:}{
+#'  \describe{
 #'    \item{\code{deltafix}}{an indicator vector of length 
 #'    \code{ncol(X)-1} specifying which regression effects are subject to selection
 #'    (i.e., 0 = subject to selection, 1 = fix in the model); defaults to a vector 
@@ -52,7 +53,8 @@
 #'    overdispersed Poisson model with observation-specific (normal) random intercept 
 #'    (see note).} 
 #'  }}
-#'  \item{\code{prior}}{\describe{\item{}{A list:}      
+#'  \item{\code{prior}:}{
+#'  \describe{
 #'    \item{\code{slab}}{distribution of the slab component, i.e. "\code{Student}" 
 #'    (default) or "\code{Normal}".} 
 #'    \item{\code{psi.nu}}{hyper-parameter of the Student-t slab (used for a 
@@ -68,7 +70,8 @@
 #'    \item{\code{pi}}{hyper-parameters of the Beta-prior for the mixture weight 
 #'    \eqn{\pi}; defaults to \code{c(pa0=1, pb0=1)}, i.e. a uniform distribution.} 
 #'  }}
-#'  \item{\code{mcmc}}{\describe{\item{}{A list:}
+#'  \item{\code{mcmc}:}{
+#'  \describe{
 #'    \item{\code{M}}{number of MCMC iterations after the burn-in phase; defaults
 #'    to 8000.} 
 #'    \item{\code{burnin}}{number of MCMC iterations discarded as burn-in; defaults 
@@ -145,10 +148,10 @@
 #'  
 #' @references Dvorzak, M. and Wagner, H. (2016). Sparse Bayesian modelling
 #'  of underreported count data. \emph{Statistical Modelling}, \strong{16}(1),
-#'  24 - 46, \url{http://dx.doi.org/10.1177/1471082x15588398}.
+#'  24 - 46, \doi{10.1177/1471082x15588398}.
 #' @references Fruehwirth-Schnatter, S. (2007). Matlab package \code{bayesf} 2.0
 #'   on \emph{Finite Mixture and Markov Switching Models}, Springer. 
-#'   \url{http://statmath.wu.ac.at/~fruehwirth/monographie/}.
+#'   \url{https://statmath.wu.ac.at/~fruehwirth/monographie/}.
 #' @references Fruehwirth-Schnatter, S., Fruehwirth, R., Held, L. and Rue, H. 
 #'   (2009). Improved auxiliary mixture sampling for hierarchical models of 
 #'   non-Gaussian data. \emph{Statistics and Computing}, \strong{19}, 479 - 492.

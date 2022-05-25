@@ -4,7 +4,8 @@
 \name{simul1}
 \alias{simul1}
 \title{Simulated data set}
-\format{A data frame with 16 rows and the following 9 variables: 
+\format{
+A data frame with 16 rows and the following 9 variables: 
 \describe{
  \item{\code{y}}{number of observed counts for each covariate pattern}
  \item{\code{E}}{total exposure time}
@@ -14,11 +15,12 @@
    the validation sample}
  \item{\code{m}}{number of true cases subject to the fallible reporting
    process (sample size of validation data)}
-}}
+}
+}
 \source{
 Dvorzak, M. and Wagner, H. (2016). Sparse Bayesian modelling
  of underreported count data. \emph{Statistical Modelling}, \strong{16}(1),
- 24 - 46, \url{http://dx.doi.org/10.1177/1471082x15588398}.
+ 24 - 46, \doi{10.1177/1471082x15588398}.
 }
 \usage{
 data(simul1)

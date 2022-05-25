@@ -4,8 +4,16 @@
 \alias{plot.pogit}
 \title{Plot an object of class \code{pogit}}
 \usage{
-\method{plot}{pogit}(x, type = "traceplot", burnin = TRUE,
-  thin = TRUE, lag.max = NULL, ci = TRUE, maxPlots = NULL, ...)
+\method{plot}{pogit}(
+  x,
+  type = "traceplot",
+  burnin = TRUE,
+  thin = TRUE,
+  lag.max = NULL,
+  ci = TRUE,
+  maxPlots = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{an object of class \code{pogit}}

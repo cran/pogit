@@ -18,7 +18,7 @@ citEntry(entry = "Article",
          textVersion = paste("Michaela Dvorzak and Helga Wagner (2016).",
                              "Sparse Bayesian modelling of underreported count data.",
                              "Statistical Modelling, 16(1), 24-46.",
-                             "URL: http://dx.doi.org/10.1177/1471082x15588398")
+                             "https://doi.org/10.1177/1471082x15588398.")
          )
 
 

@@ -4,9 +4,19 @@
 \alias{pogitBvs}
 \title{Bayesian variable selection for the Pogit model}
 \usage{
-pogitBvs(y, E = NULL, X, W = NULL, validation = NULL,
-  method = "val", model = list(), prior = list(), mcmc = list(),
-  start = list(), BVS = TRUE)
+pogitBvs(
+  y,
+  E = NULL,
+  X,
+  W = NULL,
+  validation = NULL,
+  method = "val",
+  model = list(),
+  prior = list(),
+  mcmc = list(),
+  start = list(),
+  BVS = TRUE
+)
 }
 \arguments{
 \item{y}{an integer vector of observed counts for units i = 1,...,I}
@@ -120,14 +130,14 @@ The implementation relies on the representation of the respective model as a
 Gaussian regression model in auxiliary variables (see again the help for the 
 respective function). Though variable selection is primarily used to identify 
 regressors with a non-zero effect, it can also be useful for identification of
-the Pogit model.
+the Pogit model. 
 
 By default, identification of the Pogit model is achieved by additional
 information on the reporting process through validation data and 
 incorporation of variable selection. If the information on the parameters
 of the reporting process is not provided by validation data, the
 identification of the model parameters has to be guaranteed by specifying an 
-informative prior distribution (see arguments).
+informative prior distribution (see arguments).  
 
 To model under-reported clustered data, a cluster-specific random intercept can
 be included in both model parts of the Pogit model to account for dependence
@@ -135,13 +145,14 @@ within clusters. Bayesian variance selection is applied to determine whether
 there is within-cluster dependence in either part of the model.  
 Note that an observation-specific random intercept in the
 Poisson sub-model yields an overdispersed Pogit model for unobserved
-heterogeneity.
+heterogeneity.   
 
 For details concerning the sampling algorithm see Dvorzak and Wagner (2016).
 
-Details for the model specification (see arguments):  
+Details for model specification (see arguments):  
 \describe{ 
- \item{\code{model}}{\describe{\item{}{A list:}
+ \item{\code{model}:}{
+ \describe{
    \item{\code{deltaBetafix, deltaAlphafix}}{indicator vectors of length 
    \code{ncol(X)-1} and \code{ncol(W)-1}, respectively, for the Poisson and the 
    logit sub-model, to specify which regression effects are subject to selection 
@@ -166,7 +177,8 @@ Details for the model specification (see arguments):
    for each unit (see also examples).}
 }}
 
-\item{\code{prior}}{\describe{\item{}{A list:}
+ \item{\code{prior}:}{
+ \describe{
    \item{\code{slabP, slabL}}{distribution of the slab component in the
    Poisson and logit sub-model, i.e. "\code{Student}" (default) or "\code{Normal}".}
    \item{\code{psi.nuP, psi.nuL}}{hyper-parameter of the Student-t slab in
@@ -190,7 +202,8 @@ Details for the model specification (see arguments):
    defaults to \code{c(pa0=1, pb0=1)}, i.e. a uniform distribution.}
 }}
 
-\item{\code{mcmc}}{\describe{\item{}{A list:}
+ \item{\code{mcmc}:}{
+ \describe{
    \item{\code{M}}{number of MCMC iterations after the burn-in phase; 
    defaults to 8000.} 
    \item{\code{burnin}}{number of MCMC iterations discarded as burn-in; 
@@ -208,7 +221,8 @@ Details for the model specification (see arguments):
    \eqn{\gamma_\alpha}); defaults to \code{FALSE}.} 
 }}
 
-\item{\code{start}}{\describe{\item{}{A list:}
+ \item{\code{start}:}{
+ \describe{
    \item{\code{beta}}{a vector of length \code{ncol(X)} containing starting 
    values for the regression parameters \eqn{\beta} in the Poisson model part.
    By default, a Poisson glm is fitted to the observed counts.}
@@ -333,7 +347,7 @@ plot(m5, type = "acf", lag.max = 50)
 \references{
 Dvorzak, M. and Wagner, H. (2016). Sparse Bayesian modelling
  of underreported count data. \emph{Statistical Modelling}, \strong{16}(1),
- 24 - 46, \url{http://dx.doi.org/10.1177/1471082x15588398}.
+ 24 - 46, \doi{10.1177/1471082x15588398}.
 }
 \seealso{
 \code{\link{logitBvs}}, \code{\link{poissonBvs}}

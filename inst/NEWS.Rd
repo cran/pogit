@@ -4,6 +4,12 @@
 \title{NEWS for Package \pkg{pogit}}
 
 
+\section{Changes in version 1.3.0}{
+  \itemize{
+    \item Fixed empty labels in Rd files of 'logitBvs', 'negbinBvs', 'pogitBvs', 'poissonBvs'.
+  }
+}
+
 \section{Changes in version 1.2.0}{
   \itemize{
     \item New (invisible) function 'compute_mixture' since 'compute.mixture' from

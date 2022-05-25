@@ -4,7 +4,8 @@
 \name{cervical}
 \alias{cervical}
 \title{Cervical cancer data}
-\format{A data frame with 16 rows and 19 variables: 
+\format{
+A data frame with 16 rows and 19 variables: 
 \describe{
  \item{\code{y}}{number of cervical cancer deaths for different age categories
    and European countries between 1969-1973}
@@ -17,7 +18,8 @@
    using dummy coding (i.e. 35-44, 45-54, 55-64, in years)}
  \item{\code{X.7}, \code{X.8}, \code{X.9}, \code{X.10}, \code{X.11}, \code{X.12}, \code{X.13}, \code{X.14}, \code{X.15}}{predictor
    variables for interaction effects of age and country}
-}}
+}
+}
 \source{
 World Health Organization (1976). World Health Statistics Annual: 1969-1976,
  Vol. I, \emph{Vital Statistics and Causes of Death}. Geneva: WHO.

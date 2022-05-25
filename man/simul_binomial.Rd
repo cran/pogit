@@ -4,13 +4,15 @@
 \name{simul_binomial}
 \alias{simul_binomial}
 \title{Simulated data set}
-\format{A data frame with 512 rows and the following 12 variables: 
+\format{
+A data frame with 512 rows and the following 12 variables: 
 \describe{
  \item{\code{y}}{number of successes for each covariate pattern}
  \item{\code{N}}{number of trials for each covariate pattern}
  \item{\code{X.0}}{intercept}
  \item{\code{X.1}, \code{X.2}, \code{X.3}, \code{X.4}, \code{X.5}, \code{X.6}, \code{X.7}, \code{X.8}, \code{X.9}}{binary covariates}
-}}
+}
+}
 \usage{
 data(simul_binomial)
 }

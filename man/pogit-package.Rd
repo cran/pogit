@@ -1,8 +1,8 @@
 \name{pogit-package}
 \alias{pogit-package}
-%\alias{pogit}
 \docType{package}
 \title{Bayesian variable selection for a Poisson-Logistic model}
+
 \description{
 This package provides Bayesian variable selection 
 for regression models of under-reported count data as well as for (overdispersed) 
@@ -56,7 +56,7 @@ Maintainer: Michaela Dvorzak <m.dvorzak@gmx.at>
 \references{
 Dvorzak, M. and Wagner, H. (2016). Sparse Bayesian modelling of underreported
 count data. \emph{Statistical Modelling}, \strong{16}(1), 24 - 46, 
-\url{http://dx.doi.org/10.1177/1471082x15588398}.
+\doi{10.1177/1471082x15588398}.
 
 Winkelmann, R. and Zimmermann, K. F. (1993). Poisson-Logistic regression. 
 Department of Economics, University of Munich, Working Paper No. 93 - 18.

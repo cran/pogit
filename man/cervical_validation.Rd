@@ -4,7 +4,8 @@
 \name{cervical_validation}
 \alias{cervical_validation}
 \title{Cervical cancer valiation data}
-\format{A data frame with 4 rows and 6 variables: 
+\format{
+A data frame with 4 rows and 6 variables: 
 \describe{ 
  \item{\code{v}}{number of correct death certificates in each country 
    in the validation sample } 
@@ -12,7 +13,8 @@
  \item{\code{country}}{factor variable of European countries} 
  \item{\code{W.1}, \code{W.2}, \code{W.3}}{predictor variables for country effects 
    using dummy coding (i.e. England, France, Italy)} 
- }}
+ }
+}
 \source{
 Kelson, M. and Farebrother, M. (1987). The Effect of Inaccuracies in 
   Death Certification and Coding Practices in the European Economic Community

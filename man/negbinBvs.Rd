@@ -4,8 +4,16 @@
 \alias{negbinBvs}
 \title{Bayesian variable selection for the negative binomial model}
 \usage{
-negbinBvs(y, offset = NULL, X, model = list(), prior = list(),
-  mcmc = list(), start = NULL, BVS = TRUE)
+negbinBvs(
+  y,
+  offset = NULL,
+  X,
+  model = list(),
+  prior = list(),
+  mcmc = list(),
+  start = NULL,
+  BVS = TRUE
+)
 }
 \arguments{
 \item{y}{an integer vector of count data}
@@ -78,24 +86,26 @@ priors with a spike and a slab component for the regression effects
 \eqn{\beta}. More specifically, a Dirac spike is used, i.e. a point mass at 
 zero, and (by default), the slab component is specified as a scale mixture 
 of normal distributions, resulting in a Student-t distribution with 
-2\code{psi.nu} degrees of freedom.
+2\code{psi.nu} degrees of freedom. 
 
 The MCMC sampling scheme relies on the representation of the conditional 
 Poisson model as a Gaussian regression model in auxiliary variables, 
 as described in \code{\link{poissonBvs}}. Data augmentation is based
 on the auxiliary mixture sampling algorithm of Fruehwirth-Schnatter 
 et al. (2009). For details concerning the algorithm, see 
-Dvorzak and Wagner (2016b), available on request from the authors.
+Dvorzak and Wagner (2016b), available on request from the authors.   
 
-Details for the model specification (see arguments): 
+Details for model specification (see arguments): 
 \describe{ 
- \item{\code{model}}{\describe{\item{}{A list:}  
+ \item{\code{model}:}{
+ \describe{
    \item{\code{deltafix}}{an indicator vector of length 
    \code{ncol(X)-1} specifying which regression effects are subject to selection
    (i.e., 0 = subject to selection, 1 = fix in the model); defaults to a vector 
    of zeros.} 
  }}
- \item{\code{prior}}{\describe{\item{}{A list:}      
+ \item{\code{prior}:}{
+ \describe{      
    \item{\code{slab}}{distribution of the slab component, i.e. "\code{Student}" 
    (default) or "\code{Normal}".} 
    \item{\code{psi.nu}}{hyper-parameter of the Student-t slab (used for a 
@@ -113,7 +123,8 @@ Details for the model specification (see arguments):
    \item{\code{eps}}{tuning parameter in the MH-step to sample \eqn{\rho}; 
    defaults to 0.05.} 
  }}
- \item{\code{mcmc}}{\describe{\item{}{A list:}
+ \item{\code{mcmc}:}{
+ \describe{
    \item{\code{M}}{number of MCMC iterations after the burn-in phase; defaults
    to 8000.} 
    \item{\code{burnin}}{number of MCMC iterations discarded as burn-in; defaults 

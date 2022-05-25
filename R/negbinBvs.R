@@ -26,15 +26,17 @@
 #' et al. (2009). For details concerning the algorithm, see 
 #' Dvorzak and Wagner (2016b), available on request from the authors.   
 #' 
-#' Details for the model specification (see arguments): 
+#' Details for model specification (see arguments): 
 #' \describe{ 
-#'  \item{\code{model}}{\describe{\item{}{A list:}  
+#'  \item{\code{model}:}{
+#'  \describe{
 #'    \item{\code{deltafix}}{an indicator vector of length 
 #'    \code{ncol(X)-1} specifying which regression effects are subject to selection
 #'    (i.e., 0 = subject to selection, 1 = fix in the model); defaults to a vector 
 #'    of zeros.} 
 #'  }}
-#'  \item{\code{prior}}{\describe{\item{}{A list:}      
+#'  \item{\code{prior}:}{
+#'  \describe{      
 #'    \item{\code{slab}}{distribution of the slab component, i.e. "\code{Student}" 
 #'    (default) or "\code{Normal}".} 
 #'    \item{\code{psi.nu}}{hyper-parameter of the Student-t slab (used for a 
@@ -52,7 +54,8 @@
 #'    \item{\code{eps}}{tuning parameter in the MH-step to sample \eqn{\rho}; 
 #'    defaults to 0.05.} 
 #'  }}
-#'  \item{\code{mcmc}}{\describe{\item{}{A list:}
+#'  \item{\code{mcmc}:}{
+#'  \describe{
 #'    \item{\code{M}}{number of MCMC iterations after the burn-in phase; defaults
 #'    to 8000.} 
 #'    \item{\code{burnin}}{number of MCMC iterations discarded as burn-in; defaults 

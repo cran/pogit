@@ -38,9 +38,10 @@
 #' 
 #' For details concerning the sampling algorithm see Dvorzak and Wagner (2016).
 #' 
-#' Details for the model specification (see arguments):  
+#' Details for model specification (see arguments):  
 #' \describe{ 
-#'  \item{\code{model}}{\describe{\item{}{A list:}
+#'  \item{\code{model}:}{
+#'  \describe{
 #'    \item{\code{deltaBetafix, deltaAlphafix}}{indicator vectors of length 
 #'    \code{ncol(X)-1} and \code{ncol(W)-1}, respectively, for the Poisson and the 
 #'    logit sub-model, to specify which regression effects are subject to selection 
@@ -65,7 +66,8 @@
 #'    for each unit (see also examples).}
 #' }}
 #' 
-#'  \item{\code{prior}}{\describe{\item{}{A list:}
+#'  \item{\code{prior}:}{
+#'  \describe{
 #'    \item{\code{slabP, slabL}}{distribution of the slab component in the
 #'    Poisson and logit sub-model, i.e. "\code{Student}" (default) or "\code{Normal}".}
 #'    \item{\code{psi.nuP, psi.nuL}}{hyper-parameter of the Student-t slab in
@@ -89,7 +91,8 @@
 #'    defaults to \code{c(pa0=1, pb0=1)}, i.e. a uniform distribution.}
 #' }}
 #' 
-#'  \item{\code{mcmc}}{\describe{\item{}{A list:}
+#'  \item{\code{mcmc}:}{
+#'  \describe{
 #'    \item{\code{M}}{number of MCMC iterations after the burn-in phase; 
 #'    defaults to 8000.} 
 #'    \item{\code{burnin}}{number of MCMC iterations discarded as burn-in; 
@@ -107,7 +110,8 @@
 #'    \eqn{\gamma_\alpha}); defaults to \code{FALSE}.} 
 #' }}
 #' 
-#'  \item{\code{start}}{\describe{\item{}{A list:}
+#'  \item{\code{start}:}{
+#'  \describe{
 #'    \item{\code{beta}}{a vector of length \code{ncol(X)} containing starting 
 #'    values for the regression parameters \eqn{\beta} in the Poisson model part.
 #'    By default, a Poisson glm is fitted to the observed counts.}
@@ -214,7 +218,7 @@
 #'  
 #' @references Dvorzak, M. and Wagner, H. (2016). Sparse Bayesian modelling
 #'  of underreported count data. \emph{Statistical Modelling}, \strong{16}(1),
-#'  24 - 46, \url{http://dx.doi.org/10.1177/1471082x15588398}.
+#'  24 - 46, \doi{10.1177/1471082x15588398}.
 #'
 #' @author Michaela Dvorzak <m.dvorzak@@gmx.at>, Helga Wagner
 #' @importFrom plyr rbind.fill
